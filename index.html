@@ -9,16 +9,13 @@
       margin: 0;
       padding: 0;
       height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       overflow: hidden;
 
-      /* Фон в оригинальном размере */
+      /* Адаптивный фон */
       background-image: url('https://i.ibb.co/HprLk5vN/upscalemedia-transformed-2.png');
       background-repeat: no-repeat;
-      background-position: center top; /* регулируешь положение */
-      background-size: cover; /* сохраняет оригинальный размер */
+      background-position: center center;
+      background-size: cover;
     }
 
     .container {
@@ -29,7 +26,6 @@
 
     .item {
       position: absolute;
-      width: 200px;
       transition: transform 0.3s ease, filter 0.3s ease;
       filter: brightness(0.9);
     }
@@ -39,16 +35,18 @@
       filter: brightness(1.15) drop-shadow(0 0 10px rgba(255,255,200,0.6));
     }
 
+    /* Корзина */
     #basket {
       left: 2%;
       top: 27%;
-      width: 300px;
+      width: 15%; /* адаптивный размер */
     }
 
+    /* Кастрюля */
     #pot {
       left: 30%;
       top: 25%;
-      width: 500px;
+      width: 25%; /* адаптивный размер */
     }
   </style>
 </head>
