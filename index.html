@@ -39,7 +39,7 @@
     /* Корзина */
     #basket {
       left: 8%;
-      top: 29%;
+      top: 26%;
       width: 26%;
       z-index: 10;
     }
@@ -77,50 +77,55 @@
 
   const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png";
 
-  let currentBerry = null; // <-- теперь отслеживаем, есть ли активная ягода
+  let currentBerry = null; // активная клубника (если уже взята)
 
-  basket.addEventListener("click", () => {
-    if (currentBerry) return; // <-- не даём создать вторую ягоду
-    createAndAttachBerry();
+  // При клике на корзину
+  basket.addEventListener("click", (e) => {
+    if (currentBerry) return; // не создавать новую, пока старая не исчезла
+    createAndAttachBerry(e);  // передаем координаты клика
   });
 
-  function createAndAttachBerry() {
+  // Создать клубнику и приклеить к курсору
+  function createAndAttachBerry(e) {
     const berry = document.createElement("img");
     berry.src = berrySrc;
     berry.className = "berry";
-
+    berry.style.position = "absolute";
     container.appendChild(berry);
+
     currentBerry = berry;
 
-    // Сразу приклеиваем к курсору
-    berry.style.pointerEvents = "none"; // позволяет перетаскивать без багов
-    moveBerryToMouse(berry);
+    // Сразу ставим ягоду под курсор
+    moveBerryToMouse(berry, e);
 
-    document.addEventListener("mousemove", followMouse);
-    document.addEventListener("mouseup", releaseBerry);
+    berry.style.pointerEvents = "none"; // чтобы не мешала мыши
 
-    function followMouse(e) {
-      moveBerryToMouse(berry, e);
+    // Следить за движением мыши
+    function followMouse(ev) {
+      moveBerryToMouse(berry, ev);
     }
 
-    function releaseBerry(e) {
+    function releaseBerry(ev) {
       document.removeEventListener("mousemove", followMouse);
       document.removeEventListener("mouseup", releaseBerry);
 
-      berry.style.pointerEvents = "auto"; // снова включает коллизии
+      berry.style.pointerEvents = "auto"; // снова включаем для коллизий
 
-      checkDrop(berry);
+      checkDrop(berry); // проверим, попала ли в кастрюлю
     }
+
+    document.addEventListener("mousemove", followMouse);
+    document.addEventListener("mouseup", releaseBerry);
   }
 
+  // Двигаем клубнику за мышью
   function moveBerryToMouse(berry, e) {
-    if (!e) return;
-
-    const size = berry.offsetWidth;
+    const size = berry.offsetWidth || 50; // заранее, пока не загружена
     berry.style.left = (e.clientX - size / 2) + "px";
     berry.style.top = (e.clientY - size / 2) + "px";
   }
 
+  // Проверить, попала ли клубника в кастрюлю
   function checkDrop(berry) {
     const berryRect = berry.getBoundingClientRect();
     const potRect = pot.getBoundingClientRect();
@@ -132,14 +137,15 @@
       berryRect.bottom > potRect.top;
 
     if (overlap) {
+      // красивая анимация исчезновения
       berry.style.transition = "0.25s";
       berry.style.transform = "scale(0)";
       setTimeout(() => {
         berry.remove();
-        currentBerry = null; // <-- теперь можно брать следующую
+        currentBerry = null;
       }, 250);
     } else {
-      // если промахнулся — просто отпускаем ягоду, но новой не даём
+      // если отпустили мимо кастрюли — просто сбрасываем
       currentBerry = null;
     }
   }
