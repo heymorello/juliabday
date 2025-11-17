@@ -8,12 +8,17 @@
     body {
       margin: 0;
       padding: 0;
-      background: url('https://i.ibb.co/NnLgHch1/upscalemedia-transformed-2.png" alt="upscalemedia-transformed-2') center no-repeat;
-      background-size: auto;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
+
+      /* Фон в оригинальном размере */
+      background-image: url('https://i.ibb.co/NnLgHch1/upscalemedia-transformed-2.png');
+      background-repeat: no-repeat;
+      background-position: center top; /* регулируешь положение */
+      background-size: auto; /* сохраняет оригинальный размер */
     }
 
     .container {
@@ -35,10 +40,10 @@
     }
 
     #basket {
-  left: 20%;
-  top: 27%;
-  width: 300px; /* или любое другое значение */
-}
+      left: 20%;
+      top: 27%;
+      width: 300px;
+    }
 
     #pot {
       right: 23%;
