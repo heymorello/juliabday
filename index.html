@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Мой сайт</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Стол с элементами</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://i.ibb.co/DPZcYMXD/crafting-table-updated.jpg') center/cover no-repeat;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .item {
+      position: absolute;
+      width: 200px;
+      transition: transform 0.3s ease, filter 0.3s ease;
+      filter: brightness(0.9);
+    }
+
+    .item:hover {
+      transform: scale(1.05);
+      filter: brightness(1.15) drop-shadow(0 0 10px rgba(255,255,200,0.6));
+    }
+
+    #basket {
+      left: 20%;
+      top: 55%;
+    }
+
+    #pot {
+      right: 20%;
+      top: 50%;
+    }
+  </style>
 </head>
 <body>
-  <h1>Привет, мир!</h1>
+  <div class="container">
+    <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
+    <img id="pot" class="item" src="https://i.ibb.co/fdms8bCY/Cauldron-Animation-Wider-616-width.gif" alt="Кастрюля" />
+  </div>
 </body>
 </html>
+
