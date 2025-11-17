@@ -77,54 +77,48 @@
 
   const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png";
 
+  let currentBerry = null; // <-- теперь отслеживаем, есть ли активная ягода
+
   basket.addEventListener("click", () => {
-    createBerry();
+    if (currentBerry) return; // <-- не даём создать вторую ягоду
+    createAndAttachBerry();
   });
 
-  function createBerry() {
+  function createAndAttachBerry() {
     const berry = document.createElement("img");
     berry.src = berrySrc;
     berry.className = "berry";
 
-    const basketRect = basket.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
-
-    // Появляется возле корзины
-    berry.style.left = (basketRect.left - containerRect.left + basketRect.width * 0.5) + "px";
-    berry.style.top = (basketRect.top - containerRect.top + basketRect.height * 0.3) + "px";
-
     container.appendChild(berry);
+    currentBerry = berry;
 
-    makeDraggable(berry);
+    // Сразу приклеиваем к курсору
+    berry.style.pointerEvents = "none"; // позволяет перетаскивать без багов
+    moveBerryToMouse(berry);
+
+    document.addEventListener("mousemove", followMouse);
+    document.addEventListener("mouseup", releaseBerry);
+
+    function followMouse(e) {
+      moveBerryToMouse(berry, e);
+    }
+
+    function releaseBerry(e) {
+      document.removeEventListener("mousemove", followMouse);
+      document.removeEventListener("mouseup", releaseBerry);
+
+      berry.style.pointerEvents = "auto"; // снова включает коллизии
+
+      checkDrop(berry);
+    }
   }
 
-  function makeDraggable(elem) {
-    let offsetX, offsetY;
+  function moveBerryToMouse(berry, e) {
+    if (!e) return;
 
-    function onMouseDown(e) {
-      offsetX = e.clientX - elem.offsetLeft;
-      offsetY = e.clientY - elem.offsetTop;
-      elem.style.cursor = "grabbing";
-
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
-    }
-
-    function onMouseMove(e) {
-      elem.style.left = e.clientX - offsetX + "px";
-      elem.style.top = e.clientY - offsetY + "px";
-    }
-
-    function onMouseUp(e) {
-      elem.style.cursor = "grab";
-
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-
-      checkDrop(elem);
-    }
-
-    elem.addEventListener("mousedown", onMouseDown);
+    const size = berry.offsetWidth;
+    berry.style.left = (e.clientX - size / 2) + "px";
+    berry.style.top = (e.clientY - size / 2) + "px";
   }
 
   function checkDrop(berry) {
@@ -140,7 +134,13 @@
     if (overlap) {
       berry.style.transition = "0.25s";
       berry.style.transform = "scale(0)";
-      setTimeout(() => berry.remove(), 250);
+      setTimeout(() => {
+        berry.remove();
+        currentBerry = null; // <-- теперь можно брать следующую
+      }, 250);
+    } else {
+      // если промахнулся — просто отпускаем ягоду, но новой не даём
+      currentBerry = null;
     }
   }
 </script>
