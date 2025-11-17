@@ -4,14 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>С днём рождения Джулс!</title>
+
   <style>
     body {
       margin: 0;
       padding: 0;
       height: 100vh;
       overflow: hidden;
-
-      /* Адаптивный фон */
       background-image: url('https://i.ibb.co/HprLk5vN/upscalemedia-transformed-2.png');
       background-repeat: no-repeat;
       background-position: center center;
@@ -28,6 +27,8 @@
       position: absolute;
       transition: transform 0.3s ease, filter 0.3s ease;
       filter: brightness(0.9);
+      cursor: pointer;
+      user-select: none;
     }
 
     .item:hover {
@@ -50,12 +51,93 @@
       width: 36%; /* адаптивный размер */
       z-index: 1;
     }
+
+    /* Клубника */
+    .berry {
+      position: absolute;
+      width: 10%;
+      pointer-events: none; 
+      user-select: none;
+      z-index: 20;
+    }
   </style>
 </head>
+
 <body>
   <div class="container">
     <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
     <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
   </div>
+
+<script>
+  const basket = document.getElementById("basket");
+  const pot = document.getElementById("pot");
+  const container = document.querySelector(".container");
+
+  const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png";
+
+  basket.addEventListener("click", () => {
+    createBerry();
+  });
+
+  function createBerry() {
+    const berry = document.createElement("img");
+    berry.src = berrySrc;
+    berry.className = "berry";
+
+    const basketRect = basket.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    berry.style.left = (basketRect.left - containerRect.left + basketRect.width * 0.5) + "px";
+    berry.style.top = (basketRect.top - containerRect.top + basketRect.height * 0.3) + "px";
+
+    container.appendChild(berry);
+
+    makeDraggable(berry);
+  }
+
+  function makeDraggable(elem) {
+    let offsetX, offsetY;
+
+    function onMouseDown(e) {
+      offsetX = e.clientX - elem.offsetLeft;
+      offsetY = e.clientY - elem.offsetTop;
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    }
+
+    function onMouseMove(e) {
+      elem.style.left = e.clientX - offsetX + "px";
+      elem.style.top = e.clientY - offsetY + "px";
+    }
+
+    function onMouseUp(e) {
+      document.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseup", onMouseUp);
+      checkDrop(elem);
+    }
+
+    elem.addEventListener("mousedown", onMouseDown);
+  }
+
+  function checkDrop(berry) {
+    const berryRect = berry.getBoundingClientRect();
+    const potRect = pot.getBoundingClientRect();
+
+    const overlap =
+      berryRect.left < potRect.right &&
+      berryRect.right > potRect.left &&
+      berryRect.top < potRect.bottom &&
+      berryRect.bottom > potRect.top;
+
+    if (overlap) {
+      berry.style.transition = "0.3s";
+      berry.style.transform = "scale(0)";
+      setTimeout(() => berry.remove(), 300);
+    }
+  }
+</script>
+
 </body>
 </html>
