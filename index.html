@@ -63,6 +63,21 @@
       pointer-events: auto;
       z-index: 20;
     }
+
+    .text-box {
+  position: absolute;
+  top: 20%; /* по высоте выравниваем примерно по кастрюле */
+  left: 70%; /* справа от кастрюли */
+  width: 25%; /* ширина блока */
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.8); /* полупрозрачный белый фон */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  font-family: sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #000;
+}
   </style>
 </head>
 
@@ -71,6 +86,10 @@
     <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
     <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
   </div>
+  
+  <div class="text-box">
+  После квиддича Дина словно летела по школьным коридорам в направлении своей башни. Не на метле, но всегда, кстати, мечтала полетать по школе, но увы.
+</div>
 
 <script>
   const basket = document.getElementById("basket");
