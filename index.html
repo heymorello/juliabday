@@ -64,20 +64,26 @@
       z-index: 20;
     }
 
-    .text-box {
-  position: absolute;
-  top: 20%; /* по высоте выравниваем примерно по кастрюле */
-  left: 70%; /* справа от кастрюли */
-  width: 25%; /* ширина блока */
-  padding: 15px;
-  background-color: rgba(255, 219, 159, 0.8); /* полупрозрачный белый фон */
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  font-family: sans-serif;
-  font-size: 16px;
-  line-height: 1.4;
-  color: #000;
-}
+    /* Облако с текстом */
+    .steam-text {
+      position: absolute;
+      top: 15%; /* над кастрюлей */
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      padding: 15px 20px;
+      background-color: rgba(255,255,255,0.9);
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-family: sans-serif;
+      font-size: 16px;
+      line-height: 1.4;
+      color: #000;
+      text-align: center;
+      pointer-events: none;
+      z-index: 30;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      opacity: 0;
+    }
   </style>
 </head>
 
@@ -85,43 +91,39 @@
   <div class="container">
     <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
     <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
+
+    <!-- Облако с текстом -->
+    <div id="steam-text" class="steam-text">
+      После квиддича Дина словно летела по школьным коридорам в направлении своей башни. Не на метле, но всегда, кстати, мечтала полетать по школе, но увы.
+    </div>
   </div>
-  
-  <div class="text-box">
-  После квиддича Дина словно летела по школьным коридорам в направлении своей башни. Не на метле, но всегда, кстати, мечтала полетать по школе, но увы.
-</div>
 
 <script>
   const basket = document.getElementById("basket");
   const pot = document.getElementById("pot");
   const container = document.querySelector(".container");
+  const steamText = document.getElementById("steam-text");
 
   const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png";
+  let currentBerry = null;
 
-  let currentBerry = null; // активная клубника (если уже взята)
-
-  // При клике на корзину
+  // Клик по корзине
   basket.addEventListener("click", (e) => {
-    if (currentBerry) return; // не создавать новую, пока старая не исчезла
-    createAndAttachBerry(e);  // передаем координаты клика
+    if (currentBerry) return;
+    createAndAttachBerry(e);
   });
 
-  // Создать клубнику и приклеить к курсору
   function createAndAttachBerry(e) {
     const berry = document.createElement("img");
     berry.src = berrySrc;
     berry.className = "berry";
-    berry.style.position = "absolute";
     container.appendChild(berry);
 
     currentBerry = berry;
 
-    // Сразу ставим ягоду под курсор
     moveBerryToMouse(berry, e);
+    berry.style.pointerEvents = "none";
 
-    berry.style.pointerEvents = "none"; // чтобы не мешала мыши
-
-    // Следить за движением мыши
     function followMouse(ev) {
       moveBerryToMouse(berry, ev);
     }
@@ -129,24 +131,20 @@
     function releaseBerry(ev) {
       document.removeEventListener("mousemove", followMouse);
       document.removeEventListener("mouseup", releaseBerry);
-
-      berry.style.pointerEvents = "auto"; // снова включаем для коллизий
-
-      checkDrop(berry); // проверим, попала ли в кастрюлю
+      berry.style.pointerEvents = "auto";
+      checkDrop(berry);
     }
 
     document.addEventListener("mousemove", followMouse);
     document.addEventListener("mouseup", releaseBerry);
   }
 
-  // Двигаем клубнику за мышью
   function moveBerryToMouse(berry, e) {
-    const size = berry.offsetWidth || 50; // заранее, пока не загружена
+    const size = berry.offsetWidth || 50;
     berry.style.left = (e.clientX - size / 2) + "px";
     berry.style.top = (e.clientY - size / 2) + "px";
   }
 
-  // Проверить, попала ли клубника в кастрюлю
   function checkDrop(berry) {
     const berryRect = berry.getBoundingClientRect();
     const potRect = pot.getBoundingClientRect();
@@ -158,17 +156,25 @@
       berryRect.bottom > potRect.top;
 
     if (overlap) {
-      // красивая анимация исчезновения
       berry.style.transition = "0.25s";
       berry.style.transform = "scale(0)";
       setTimeout(() => {
         berry.remove();
         currentBerry = null;
+        showSteamText(); // показываем облако с текстом
       }, 250);
     } else {
-      // если отпустили мимо кастрюли — просто сбрасываем
       currentBerry = null;
     }
+  }
+
+  function showSteamText() {
+    steamText.style.opacity = 1;
+    steamText.style.transform = "translate(-50%, -50%) scale(1)";
+    setTimeout(() => {
+      steamText.style.opacity = 0;
+      steamText.style.transform = "translate(-50%, -50%) scale(0)";
+    }, 2000); // облако исчезает через 2 секунды
   }
 </script>
 
