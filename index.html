@@ -96,20 +96,24 @@ body {
   <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
   <img id="wand" class="item" src="https://i.ibb.co/BVRr2VR2/Chat-GPT-Image-19-2025-08-36-05.png" alt="Волшебная палочка" />
 
-  <button id="music-btn" style="
+<button id="music-btn" style="
   position: fixed;
   top: 10px;
   left: 10px;
-  padding: 10px 18px;
-  font-size: 16px;
-  background-color: #7b3131;
-  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
   border: none;
-  border-radius: 10px;
+  background-color: #7b3131;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 100;
 ">
-  Музыка 🎺
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+    <polygon points="5,3 19,12 5,21"/>
+  </svg>
 </button>
 
   <div id="steam-text">
@@ -506,22 +510,18 @@ function showTip(x, y, text) {
   setTimeout(() => smallTip.style.opacity = "0", 1000);
 }
 
-  const musicBtn = document.getElementById("music-btn");
-
-// создаем элемент audio
-const bgMusic = new Audio("https://github.com/heymorello/juliabday/raw/refs/heads/main/HOYO-MiX_-_What_a_Delightful_Scenery_77641798.mp3"); // ссылка на mp3
-bgMusic.loop = true; // музыка повторяется
+ const btn = document.getElementById("music-btn");
+const bgMusic = new Audio("https://github.com/heymorello/juliabday/raw/refs/heads/main/HOYO-MiX_-_What_a_Delightful_Scenery_77641798.mp3");
+bgMusic.loop = true;
 
 let musicPlaying = false;
 
-musicBtn.addEventListener("click", () => {
+btn.addEventListener("click", () => {
   if (!musicPlaying) {
     bgMusic.play();
-    musicBtn.textContent = "Музыка 🎺";
     musicPlaying = true;
   } else {
     bgMusic.pause();
-    musicBtn.textContent = "Музыка 🎺";
     musicPlaying = false;
   }
 });
