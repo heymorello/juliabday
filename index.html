@@ -202,7 +202,7 @@ function checkDrop(berry) {
       showSteamText();
       lastBubble = bubbleIndex >= messages.length;
     } else {
-      showTip(potRect.left + potRect.width / 2, potRect.top, "теперь палочка 🪄");
+      showTip(potRect.left + potRect.width / 2, potRect.top, "");
     }
   } else {
     currentBerry = null;
@@ -297,8 +297,8 @@ function transformPotToJam() {
   const newJar = document.createElement("img");
   newJar.src = jamJarSrc;
   newJar.style.position = "absolute";
-  newJar.style.left = "40%";
-  newJar.style.top = "40%";
+  newJar.style.left = "35%";
+  newJar.style.top = "20%";
   newJar.style.width = "25%";
   newJar.style.zIndex = 1;
 
