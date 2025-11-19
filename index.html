@@ -99,7 +99,15 @@
       pointer-events: none;
       z-index: 30;
       transition: transform 0.5s ease, opacity 0.5s ease;
-    }
+
+      text-align: justify;       /* весь текст по ширине */
+  }
+    
+    #steam-text p:last-child {
+  font-weight: bold;       /* жирный */
+  color: #944a42;          /* нужный цвет */
+  text-align: center;      /* центр последнего абзаца, если нужно */
+}
 
     /* Пуф */
     .poof {
