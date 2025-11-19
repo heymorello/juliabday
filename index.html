@@ -122,9 +122,8 @@
       width: 14%;
       pointer-events: none;
       z-index: 25;
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 0;
-      transition: transform 0.4s ease, opacity 0.4s ease;
+     opacity: 0;
+    transition: opacity 0.6s ease;
     }
   </style>
 </head>
@@ -228,7 +227,6 @@
     puff.style.top = y + "px";
 
     requestAnimationFrame(() => {
-      puff.style.transform = "translate(-50%, -50%) scale(1)";
       puff.style.opacity = "1";
     });
 
