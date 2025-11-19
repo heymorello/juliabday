@@ -17,8 +17,8 @@
       background-repeat: no-repeat;
       background-position: center center;
       background-size: cover;
-      user-select: none;
       font-family: 'Pangolin', cursive;
+      user-select: none;
     }
 
     .container {
@@ -60,7 +60,6 @@
 
     /* Волшебная палочка */
     #wand {
-      position: absolute;
       left: 58%;
       top: 64%;
       width: 24%;
@@ -73,48 +72,42 @@
     .berry {
       position: absolute;
       width: 10%;
-      user-select: none;
       cursor: grab;
-      pointer-events: auto;
+      user-select: none;
       z-index: 20;
+      pointer-events: auto;
     }
 
-    /* Облако-текст (как комикс-бабл) */
+    /* Облако-текст (комикс-бабл) */
     #steam-text {
       position: absolute;
       top: 32%;
       left: 75%;
       transform: translate(-50%, -50%) scale(0);
       opacity: 0;
-
       width: 22%;
       padding: 18px 22px;
-
       background-color: rgba(255,255,255,0.95);
       border-radius: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-
       font-family: 'Pangolin', cursive;
       font-size: 16px;
       line-height: 1.4;
-
       pointer-events: none;
       z-index: 30;
       transition: transform 0.5s ease, opacity 0.5s ease;
-
-      text-align: justify;       /* весь текст по ширине */
-  }
+      text-align: justify;
+    }
 
     /* Пуф */
     .poof {
       position: absolute;
-      width: 14%;
+      width: 70px;
       pointer-events: none;
       z-index: 25;
-     opacity: 0;
-    transition: opacity 0.6s ease;
+      opacity: 0;
+      transition: opacity 0.6s ease;
     }
-
   </style>
 </head>
 
@@ -122,17 +115,12 @@
   <div class="container">
     <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
     <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
-
-    <!-- Волшебная палочка -->
     <img id="wand" class="item" src="https://i.ibb.co/BVRr2VR2/Chat-GPT-Image-19-2025-08-36-05.png" alt="Волшебная палочка" />
+
+    <!-- Пар и текст-бабл -->
+    <div id="steam-text">Текст текст текст</div>
   </div>
-  
- <!-- Пар и текст-бабл -->
-    <div id="steam-text">
-      Текст текст текст
-    </div>
-  </div>
-  
+
 <script>
   const basket = document.getElementById("basket");
   const pot = document.getElementById("pot");
@@ -140,8 +128,6 @@
   const steamText = document.getElementById("steam-text");
 
   const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png";
-
-  // 🔥 29 текстов баблов
   const messages = [
     "Джулс, с днем рождения! Пусть этот год принесёт тебе много сил, радости и крутых событий. Желаю ярких впечатлений, вдохновения во всём за что берёшься и крепкого здоровья.<br><br>Дина",
     "Джулс, с днем рождения!<br><br>Каждый день испытывай удовольствие от жизни глобально и в мелочах, пусть все мечты непременно сбудутся. Благополучия, всех ресурсов в достатке, здоровья на максималках и большого-прибольшого счастья! *сердце*<br><br>Хаттори Райто",
@@ -176,20 +162,18 @@
   ];
 
   let currentBerry = null;
-  let bubbleIndex = 0; // сколько раз бросили клубнику
+  let bubbleIndex = 0;
 
-  // КЛИК ПО КОРЗИНЕ — создаём клубнику
   basket.addEventListener("click", (e) => {
     if (currentBerry) return;
-    createAndAttachBerry(e);
+    createBerry(e);
   });
 
-  function createAndAttachBerry(e) {
+  function createBerry(e) {
     const berry = document.createElement("img");
     berry.src = berrySrc;
     berry.className = "berry";
     container.appendChild(berry);
-
     currentBerry = berry;
 
     moveBerryToMouse(berry, e);
@@ -211,14 +195,15 @@
     document.addEventListener("mouseup", releaseBerry);
   }
 
-  // Перемещение ягоды за мышью
   function moveBerryToMouse(berry, e) {
+    const rect = container.getBoundingClientRect();
     const size = berry.offsetWidth || 50;
-    berry.style.left = (e.clientX - size / 2) + "px";
-    berry.style.top = (e.clientY - size / 2) + "px";
+    const x = e.clientX - rect.left - size/2;
+    const y = e.clientY - rect.top - size/2;
+    berry.style.left = x + "px";
+    berry.style.top = y + "px";
   }
 
-  // Проверка попадания в кастрюлю
   function checkDrop(berry) {
     const berryRect = berry.getBoundingClientRect();
     const potRect = pot.getBoundingClientRect();
@@ -230,26 +215,26 @@
       berryRect.bottom > potRect.top;
 
     if (overlap) {
-      triggerPoof(berryRect.left, berryRect.top);
+      const x = berryRect.left + berryRect.width/2;
+      const y = berryRect.top + berryRect.height/2;
+      triggerPoof(x, y);
       berry.remove();
       currentBerry = null;
-
       showSteamText();
     } else {
       currentBerry = null;
     }
   }
 
-  // Пуф
   function triggerPoof(x, y) {
     const puff = document.createElement("img");
     puff.src = "https://opengameart.org/sites/default/files/gif_4.gif";
     puff.className = "poof";
-
     container.appendChild(puff);
 
-    puff.style.left = x + "px";
-    puff.style.top = y + "px";
+    const rect = container.getBoundingClientRect();
+    puff.style.left = (x - rect.left - 35) + "px"; // центрируем
+    puff.style.top = (y - rect.top - 35) + "px";
 
     requestAnimationFrame(() => {
       puff.style.opacity = "1";
@@ -261,15 +246,11 @@
     }, 600);
   }
 
-  // Появление бабла с новым текстом
   function showSteamText() {
-    if (bubbleIndex >= messages.length) return; // не больше 29
-
-    // 🔥 Устанавливаем текст
+    if (bubbleIndex >= messages.length) bubbleIndex = 0; // зацикливаем
     steamText.innerHTML = messages[bubbleIndex];
     bubbleIndex++;
 
-    // 🔥 Перезапуск анимации
     steamText.style.transition = "none";
     steamText.style.transform = "translate(-50%, -50%) scale(0)";
     steamText.style.opacity = "0";
@@ -283,6 +264,5 @@
     });
   }
 </script>
-
 </body>
 </html>
