@@ -189,38 +189,41 @@
   });
 
   function createAndAttachBerry(e) {
-    const berry = document.createElement("img");
-    berry.src = berrySrc;
-    berry.className = "berry";
-    container.appendChild(berry);
+  const berry = document.createElement("img");
+  berry.src = berrySrc;
+  berry.className = "berry";
+  container.appendChild(berry);
 
-    currentBerry = berry;
+  currentBerry = berry;
 
+  // Ждем, пока картинка загрузится, чтобы корректно взять размер
+  berry.onload = () => {
     moveBerryToMouse(berry, e);
+  };
 
-    berry.style.pointerEvents = "none";
+  berry.style.pointerEvents = "none"; // чтобы не мешала мыши
 
-    function followMouse(ev) {
-      moveBerryToMouse(berry, ev);
-    }
-
-    function releaseBerry(ev) {
-      document.removeEventListener("mousemove", followMouse);
-      document.removeEventListener("mouseup", releaseBerry);
-      berry.style.pointerEvents = "auto";
-      checkDrop(berry);
-    }
-
-    document.addEventListener("mousemove", followMouse);
-    document.addEventListener("mouseup", releaseBerry);
+  function followMouse(ev) {
+    moveBerryToMouse(berry, ev);
   }
 
-  // Перемещение ягоды за мышью
-  function moveBerryToMouse(berry, e) {
-    const size = berry.offsetWidth || 50;
-    berry.style.left = (e.clientX - size / 2) + "px";
-    berry.style.top = (e.clientY - size / 2) + "px";
+  function releaseBerry(ev) {
+    document.removeEventListener("mousemove", followMouse);
+    document.removeEventListener("mouseup", releaseBerry);
+    berry.style.pointerEvents = "auto"; // снова включаем для коллизий
+    checkDrop(berry);
   }
+
+  document.addEventListener("mousemove", followMouse);
+  document.addEventListener("mouseup", releaseBerry);
+}
+
+function moveBerryToMouse(berry, e) {
+  const rect = berry.getBoundingClientRect();
+  const size = rect.width || 50; // берём фактический размер
+  berry.style.left = (e.clientX - size / 2) + "px";
+  berry.style.top = (e.clientY - size / 2) + "px";
+}
 
   // Проверка попадания в кастрюлю
   function checkDrop(berry) {
