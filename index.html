@@ -274,15 +274,36 @@ let firstClick = true;
 let lastBubble = false;
 let jamPlaced = false;
 let berriesDisabled = false;
+let berriesLocked = false;
 
 // Запоминаем исходную позицию палочки
 const wandStart = { left: wand.style.left, top: wand.style.top };
 
 // -------------------- КЛИК ПО КОРЗИНЕ --------------------
 basket.addEventListener("click", (e) => {
-  if (firstClick) { hideSteamText(); firstClick = false; }
+  
+  // 1) Первый клик скрывает приветственный бабл
+  if (firstClick) { 
+    hideSteamText(); 
+    firstClick = false; 
+  }
+
+  // 2) Если уже несём ягоду — игнорируем
   if (currentBerry) return;
-  if (berriesDisabled) { showTip(e.clientX, e.clientY, "в варенье много ягод 🍓"); return; }
+
+  // 3) ❗ Блокировка после последнего бабла
+  if (berriesLocked) {  
+    showTip(e.clientX, e.clientY, "ягоды достаточно 🍓");
+    return;  // ← критично важно
+  }
+
+  // 4) Когда кастрюля уже заполнена
+  if (berriesDisabled) {
+    showTip(e.clientX, e.clientY, "в варенье много ягод 🍓");
+    return;
+  }
+
+  // 5) Если всё ок — создаём ягоду
   createBerry(e);
 });
 
@@ -345,8 +366,13 @@ function checkDrop(berry) {
 // -------------------- БАБЛ --------------------
 function showSteamText() {
   steamText.innerHTML = messages[bubbleIndex].join("<br><br>");
+
+  // сразу после вывода текста проверяем: этот бабл — последний?
+  if (bubbleIndex === messages.length - 1) {
+    berriesLocked = true;   // 🔒 блокируем ягоды
+  }
+
   bubbleIndex++;
-  lastBubble = bubbleIndex >= messages.length;
 
   steamText.style.transition = "none";
   steamText.style.transform = "translate(-50%, -50%) scale(0)";
