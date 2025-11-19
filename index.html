@@ -129,6 +129,12 @@ let berriesDisabled = false;
 
 let wandPicked = false;
 
+// ⭐ СОХРАНЯЕМ ИСХОДНУЮ ПОЗИЦИЮ ПАЛОЧКИ
+const wandStart = {
+  left: wand.style.left,
+  top: wand.style.top
+};
+
 // -------------------- КЛИК ПО КОРЗИНЕ --------------------
 basket.addEventListener("click", (e) => {
   if (firstClick) {
@@ -189,7 +195,6 @@ function checkDrop(berry) {
     const y = berryRect.top + berryRect.height / 2;
 
     triggerPoof(x, y, lastBubble ? 2 : 1);
-
     berry.remove();
     currentBerry = null;
 
@@ -284,12 +289,13 @@ function transformPotToJam() {
     2
   );
 
+  // Создаём банку
   const newJar = document.createElement("img");
   newJar.src = jamJarSrc;
   newJar.style.position = "absolute";
-  newJar.style.left = "33%";
-  newJar.style.top = "20%";
-  newJar.style.width = "26%";
+  newJar.style.left = "45%";
+  newJar.style.top = "30%";
+  newJar.style.width = "26%"; // ← ты можешь менять размер
   newJar.style.zIndex = 1;
 
   container.replaceChild(newJar, pot);
@@ -297,6 +303,19 @@ function transformPotToJam() {
 
   jamPlaced = true;
   berriesDisabled = true;
+
+  // ⭐ возвращаем палочку
+  setTimeout(returnWandHome, 300);
+}
+
+// ⭐ ФУНКЦИЯ ВОЗВРАТА ПАЛОЧКИ
+function returnWandHome() {
+  wand.style.transition = "left 0.6s ease, top 0.6s ease, transform 0.6s ease";
+  wand.style.left = wandStart.left;
+  wand.style.top = wandStart.top;
+  wand.style.transform = "rotate(-20deg)";
+  wand.style.pointerEvents = "auto";
+  wandPicked = false;
 }
 
 // -------------------- ПОФ --------------------
@@ -332,5 +351,6 @@ function showTip(x, y, text) {
   setTimeout(() => (smallTip.style.opacity = "0"), 1000);
 }
 </script>
+
 </body>
 </html>
