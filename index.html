@@ -339,9 +339,18 @@ function triggerPoof(x, y, scale = 1) {
     setTimeout(() => puff.remove(), 400);
   }, 600);
 }
+  // -------------------- ПОДСКАЗКИ --------------------
+function showTip(x, y) {
+  let text = "";
 
-// -------------------- ПОДСКАЗКИ --------------------
-function showTip(x, y, text) {
+  if (!wandPicked && !lastBubble) {
+    text = "ещё не время 🪄"; // бабл ещё не закончен
+  } else if (wandPicked && !jamPlaced) {
+    text = "поднеси к кастрюле 🥘🪄"; // палочка в руке, можно к кастрюле
+  } else {
+    return; // если варенье готово, подсказки не показываем
+  }
+
   smallTip.innerText = text;
   smallTip.style.left = x + "px";
   smallTip.style.top = y - 20 + "px";
@@ -349,20 +358,17 @@ function showTip(x, y, text) {
   setTimeout(() => (smallTip.style.opacity = "0"), 1000);
 }
 
-// Клик по палочке (до того как пользователь её взял)
+// -------------------- ПРИМЕР ВЫЗОВА --------------------
+// на клик по палочке:
 wand.addEventListener("mousedown", (e) => {
-  if (!wandPicked) {
-    showTip(e.clientX, e.clientY, "ещё не время 🪄");
-  }
+  showTip(e.clientX, e.clientY);
 });
 
-// Клик по корзине, когда варенье уже полно ягод
-basket.addEventListener("click", (e) => {
-  if (berriesDisabled) {
-    showTip(e.clientX, e.clientY, "варенье уже полно ягод 🍓");
-    return;
-  }
+// на клик по кастрюле (когда палочка в руке):
+pot.addEventListener("mousedown", (e) => {
+  if (wandPicked && !jamPlaced) showTip(e.clientX, e.clientY);
 });
+
 </script>
 
 </body>
