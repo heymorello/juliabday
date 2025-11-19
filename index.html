@@ -129,7 +129,7 @@ let berriesDisabled = false;
 
 let wandPicked = false;
 
-// ⭐ СОХРАНЯЕМ ИСХОДНУЮ ПОЗИЦИЮ ПАЛОЧКИ
+// Запоминаем исходную позицию палочки
 const wandStart = {
   left: wand.style.left,
   top: wand.style.top
@@ -244,6 +244,11 @@ function pickWand(e) {
   wand.style.pointerEvents = "none";
   wand.style.transition = "none";
 
+  // Скрываем бабл сразу, как берём палочку
+  steamText.style.transition = "opacity 0.4s ease";
+  steamText.style.opacity = "0";
+  steamText.style.pointerEvents = "none";
+
   followWand(e);
 
   function move(ev) { followWand(ev); }
@@ -289,13 +294,12 @@ function transformPotToJam() {
     2
   );
 
-  // Создаём банку
   const newJar = document.createElement("img");
   newJar.src = jamJarSrc;
   newJar.style.position = "absolute";
-  newJar.style.left = "45%";
-  newJar.style.top = "30%";
-  newJar.style.width = "26%"; // ← ты можешь менять размер
+  newJar.style.left = pot.style.left;
+  newJar.style.top = pot.style.top;
+  newJar.style.width = "22%";
   newJar.style.zIndex = 1;
 
   container.replaceChild(newJar, pot);
@@ -304,11 +308,10 @@ function transformPotToJam() {
   jamPlaced = true;
   berriesDisabled = true;
 
-  // ⭐ возвращаем палочку
   setTimeout(returnWandHome, 300);
 }
 
-// ⭐ ФУНКЦИЯ ВОЗВРАТА ПАЛОЧКИ
+// -------------------- ВОЗВРАТ ПАЛОЧКИ --------------------
 function returnWandHome() {
   wand.style.transition = "left 0.6s ease, top 0.6s ease, transform 0.6s ease";
   wand.style.left = wandStart.left;
