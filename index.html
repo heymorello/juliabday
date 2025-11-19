@@ -45,8 +45,8 @@ body {
   position: absolute;
   pointer-events: none;
   z-index: 25;
-  opacity: 0;
-  transition: opacity 0.6s ease;
+  opacity: 1; /* сразу видимая */
+  /* transition: opacity 0.6s ease; */ /* убираем */
   max-width: 150px;
   width: auto;
   height: auto;
@@ -352,14 +352,12 @@ function triggerPoof(x, y, scale = 1) {
     puff.style.height = "auto"
     puff.style.left = (x - rect.left - w / 2) + "px";
     puff.style.top = (y - rect.top - h / 2) + "px";
-    requestAnimationFrame(() => puff.style.opacity = "1");
+    puff.style.opacity = "1"; // сразу видимая
   };
 
-  setTimeout(() => {
-    puff.style.opacity = "0";
-    setTimeout(() => puff.remove(), 400);
-  }, 600);
-}
+ setTimeout(() => {
+  puff.remove();
+}, 600); // через 600ms элемент просто исчезнет
 
 // -------------------- ПОДСКАЗКИ --------------------
 function showTip(x, y, text) {
