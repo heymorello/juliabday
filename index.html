@@ -18,11 +18,7 @@ body {
   font-family: 'Pangolin', cursive;
   user-select: none;
 }
-.container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
+.container { position: relative; width: 100%; height: 100%; }
 .item {
   position: absolute;
   transition: transform 0.3s ease, filter 0.3s ease;
@@ -30,10 +26,8 @@ body {
   cursor: pointer;
   user-select: none;
 }
-.item:hover {
-  transform: scale(1.05);
-  filter: brightness(1.15) drop-shadow(0 0 10px rgba(255,255,200,0.6));
-}
+.item:hover { transform: scale(1.05); filter: brightness(1.15) drop-shadow(0 0 10px rgba(255,255,200,0.6)); }
+
 #basket { left: 8%; top: 25%; width: 26%; z-index: 10; filter: drop-shadow(0px 10px 1px rgba(0,0,0,0.2)); }
 #pot { left: 33%; top: 20%; width: 36%; z-index: 1; filter: drop-shadow(0px 12px 1px rgba(0,0,0,0.2)); }
 #wand { left: 58%; top: 64%; width: 24%; transform: rotate(-20deg); z-index: 5; filter: drop-shadow(0px 8px 3px rgba(0,0,0,0.25)); }
@@ -45,8 +39,7 @@ body {
   position: absolute;
   pointer-events: none;
   z-index: 25;
-  opacity: 1; /* сразу видимая */
-  /* transition: opacity 0.6s ease; */ /* убираем */
+  opacity: 1;
   max-width: 150px;
   width: auto;
   height: auto;
@@ -114,15 +107,8 @@ const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png"
 const jamJarSrc = "https://i.ibb.co/GvHNg5vc/Chat-GPT-Image-19-2025-16-38-48.png";
 
 const messages = [
-  [
-    "Джулс, с днем рождения! Пусть этот год принесёт тебе много сил, радости и крутых событий. Желаю ярких впечатлений, вдохновения во всём за что берёшься и крепкого здоровья.",
-    "Дина"
-  ],
-  [
-    "Джулс, с днем рождения!",
-    "Каждый день испытывай удовольствие от жизни глобально и в мелочах, пусть все мечты непременно сбудутся. Благополучия, всех ресурсов в достатке, здоровья на максималках и большого-прибольшого счастья! *сердце*",
-    "Хаттори Райто"
-  ]
+  ["Джулс, с днем рождения! Пусть этот год принесёт тебе много сил, радости и крутых событий. Желаю ярких впечатлений, вдохновения во всём за что берёшься и крепкого здоровья.", "Дина"],
+  ["Джулс, с днем рождения! Каждый день испытывай удовольствие от жизни глобально и в мелочах, пусть все мечты непременно сбудутся. Благополучия, всех ресурсов в достатке, здоровья на максималках и большого-прибольшого счастья! *сердце*", "Хаттори Райто"]
 ];
 
 let currentBerry = null;
@@ -132,54 +118,23 @@ let lastBubble = false;
 let jamPlaced = false;
 let berriesDisabled = false;
 
-let wandPicked = false;
-
 // Запоминаем исходную позицию палочки
-const wandStart = {
-  left: wand.style.left,
-  top: wand.style.top
-};
+const wandStart = { left: wand.style.left, top: wand.style.top };
 
 // -------------------- КЛИК ПО КОРЗИНЕ --------------------
 basket.addEventListener("click", (e) => {
-  if (firstClick) {
-    hideSteamText();
-    firstClick = false;
-  }
-
-  if (berriesDisabled) {
-    showTip(e.clientX, e.clientY, "");
-    return;
-  }
+  if (firstClick) { hideSteamText(); firstClick = false; }
   if (currentBerry) return;
-
+  if (berriesDisabled) { showTip(e.clientX, e.clientY, "в варенье много ягод 🍓"); return; }
   createBerry(e);
 });
 
-  function showSteamText() {
-  steamText.innerHTML = messages[bubbleIndex];
-  
-  bubbleIndex++;
-  lastBubble = bubbleIndex >= messages.length;
-
-  steamText.style.transition = "none";
-  steamText.style.transform = "translate(-50%, -50%) scale(0)";
-  steamText.style.opacity = "0";
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      steamText.style.transition = "transform 0.5s ease, opacity 0.5s ease";
-      steamText.style.transform = "translate(-50%, -50%) scale(1)";
-      steamText.style.opacity = "1";
-    });
-  });
-
-  // Если последний бабл, сразу включаем подсказку и блокировку ягод
-  if (lastBubble) {
-    berriesDisabled = true;
-    const potRect = pot.getBoundingClientRect();
-    showTip(potRect.left + potRect.width / 2, potRect.top, "в варенье полно ягод 🍓");
-  }
-}
+// -------------------- КЛИК ПО ПАЛОЧКЕ --------------------
+wand.addEventListener("click", (e) => {
+  if (!lastBubble) { showTip(e.clientX, e.clientY, "пока рано 🪄"); return; }
+  if (jamPlaced) return;
+  pickWand(e);
+});
 
 // -------------------- ЯГОДА --------------------
 function createBerry(e) {
@@ -188,12 +143,11 @@ function createBerry(e) {
   berry.className = "berry";
   container.appendChild(berry);
   currentBerry = berry;
-
   moveBerry(berry, e);
   berry.style.pointerEvents = "none";
 
   function follow(ev) { moveBerry(berry, ev); }
-  function release(ev) {
+  function release(ev) { 
     document.removeEventListener("mousemove", follow);
     document.removeEventListener("mouseup", release);
     berry.style.pointerEvents = "auto";
@@ -213,7 +167,6 @@ function moveBerry(berry, e) {
 function checkDrop(berry) {
   const berryRect = berry.getBoundingClientRect();
   const potRect = pot.getBoundingClientRect();
-
   const overlap =
     berryRect.left < potRect.right &&
     berryRect.right > potRect.left &&
@@ -221,33 +174,27 @@ function checkDrop(berry) {
     berryRect.bottom > potRect.top;
 
   if (overlap) {
-    const x = berryRect.left + berryRect.width / 2;
-    const y = berryRect.top + berryRect.height / 2;
-
+    const x = berryRect.left + berryRect.width/2;
+    const y = berryRect.top + berryRect.height/2;
     triggerPoof(x, y, lastBubble ? 2 : 1);
     berry.remove();
     currentBerry = null;
 
-    if (!lastBubble) {
-      showSteamText();
-      lastBubble = bubbleIndex >= messages.length;
-    } else {
-      showTip(potRect.left + potRect.width / 2, potRect.top, "");
-    }
-  } else {
-    currentBerry = null;
-  }
+    if (!lastBubble) showSteamText();
+    else { berriesDisabled = true; showTip(potRect.left + potRect.width/2, potRect.top, "в варенье много ягод 🍓"); }
+  } else currentBerry = null;
 }
 
 // -------------------- БАБЛ --------------------
 function showSteamText() {
   steamText.innerHTML = messages[bubbleIndex];
   bubbleIndex++;
-  lastBubble = bubbleIndex === messages.length;
+  lastBubble = bubbleIndex >= messages.length;
 
   steamText.style.transition = "none";
   steamText.style.transform = "translate(-50%, -50%) scale(0)";
   steamText.style.opacity = "0";
+
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       steamText.style.transition = "transform 0.5s ease, opacity 0.5s ease";
@@ -257,35 +204,17 @@ function showSteamText() {
   });
 }
 
+// -------------------- СКРЫТИЕ БАБЛ --------------------
 function hideSteamText() {
   steamText.style.transform = "translate(-50%, -50%) scale(0)";
   steamText.style.opacity = "0";
   setTimeout(() => { steamText.innerHTML = ""; }, 500);
 }
 
-  function renderMessage(messageIndex) {
-  const msg = messages[messageIndex];
-  steamText.innerHTML = msg.map((para, i) => {
-    if (i === msg.length - 1) {
-      return `<h2>${para}</h2>`; // последний абзац → H2
-    } else {
-      return `<p>${para}</p>`;   // остальные → P
-    }
-  }).join('');
-}
-
 // -------------------- ПАЛОЧКА --------------------
-wand.addEventListener("click", (e) => {
-  if (!lastBubble || jamPlaced) return;
-  pickWand(e);
-});
-
 function pickWand(e) {
-  wandPicked = true;
   wand.style.pointerEvents = "none";
   wand.style.transition = "none";
-
-  // Скрываем бабл сразу, как берём палочку
   steamText.style.transition = "opacity 0.4s ease";
   steamText.style.opacity = "0";
   steamText.style.pointerEvents = "none";
@@ -293,11 +222,7 @@ function pickWand(e) {
   followWand(e);
 
   function move(ev) { followWand(ev); }
-  function drop(ev) {
-    document.removeEventListener("mousemove", move);
-    document.removeEventListener("mouseup", drop);
-    checkWandUse(ev);
-  }
+  function drop(ev) { document.removeEventListener("mousemove", move); document.removeEventListener("mouseup", drop); checkWandUse(ev); }
 
   document.addEventListener("mousemove", move);
   document.addEventListener("mouseup", drop);
@@ -306,34 +231,25 @@ function pickWand(e) {
 function followWand(e) {
   const rect = container.getBoundingClientRect();
   const w = wand.offsetWidth;
-  wand.style.left = (e.clientX - rect.left - w / 2) + "px";
-  wand.style.top = (e.clientY - rect.top - w / 4) + "px";
+  wand.style.left = (e.clientX - rect.left - w/2) + "px";
+  wand.style.top = (e.clientY - rect.top - w/4) + "px";
 }
 
-// -------------------- ИСПОЛЬЗОВАНИЕ ПАЛОЧКИ --------------------
 function checkWandUse(e) {
   const wandRect = wand.getBoundingClientRect();
   const potRect = pot.getBoundingClientRect();
-
   const overlap =
     wandRect.left < potRect.right &&
     wandRect.right > potRect.left &&
     wandRect.top < potRect.bottom &&
     wandRect.bottom > potRect.top;
 
-  if (overlap) {
-    transformPotToJam();
-  } else {
-    showTip(e.clientX, e.clientY, "");
-  }
+  if (overlap) transformPotToJam();
+  else showTip(e.clientX, e.clientY, "пока рано 🪄");
 }
 
 function transformPotToJam() {
-  triggerPoof(
-    pot.getBoundingClientRect().left + pot.offsetWidth / 2,
-    pot.getBoundingClientRect().top + pot.offsetHeight / 2,
-    2
-  );
+  triggerPoof(pot.getBoundingClientRect().left+pot.offsetWidth/2, pot.getBoundingClientRect().top+pot.offsetHeight/2, 2);
 
   const newJar = document.createElement("img");
   newJar.src = jamJarSrc;
@@ -346,21 +262,18 @@ function transformPotToJam() {
 
   container.replaceChild(newJar, pot);
   pot = newJar;
-
   jamPlaced = true;
   berriesDisabled = true;
 
   setTimeout(returnWandHome, 300);
 }
 
-// -------------------- ВОЗВРАТ ПАЛОЧКИ --------------------
 function returnWandHome() {
   wand.style.transition = "left 0.6s ease, top 0.6s ease, transform 0.6s ease";
   wand.style.left = wandStart.left;
   wand.style.top = wandStart.top;
   wand.style.transform = "rotate(-20deg)";
   wand.style.pointerEvents = "auto";
-  wandPicked = false;
 }
 
 // -------------------- ПОФ --------------------
@@ -375,16 +288,14 @@ function triggerPoof(x, y, scale = 10) {
     const w = puff.offsetWidth * scale;
     const h = puff.offsetHeight * scale;
     puff.style.width = w + "px";
-    puff.style.height = "auto"
-    puff.style.left = (x - rect.left - w / 2) + "px";
-    puff.style.top = (y - rect.top - h / 2) + "px";
-    puff.style.opacity = "1"; // сразу видимая
+    puff.style.height = "auto";
+    puff.style.left = (x - rect.left - w/2) + "px";
+    puff.style.top = (y - rect.top - h/2) + "px";
+    puff.style.opacity = "1";
   };
 
- setTimeout(() => {
-  puff.remove();
-}, 600); // через 600ms элемент просто исчезнет
-  }
+  setTimeout(() => { puff.remove(); }, 600);
+}
 
 // -------------------- ПОДСКАЗКИ --------------------
 function showTip(x, y, text) {
@@ -392,7 +303,7 @@ function showTip(x, y, text) {
   smallTip.style.left = x + "px";
   smallTip.style.top = y - 20 + "px";
   smallTip.style.opacity = "1";
-  setTimeout(() => (smallTip.style.opacity = "0"), 1000);
+  setTimeout(() => smallTip.style.opacity = "0", 1000);
 }
 </script>
 
