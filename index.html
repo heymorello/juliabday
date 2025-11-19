@@ -1,284 +1,285 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>С днём рождения, Джулс!</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>С днём рождения, Джулс!</title>
+<link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  background-image: url('https://i.ibb.co/HprLk5vN/upscalemedia-transformed-2.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  font-family: 'Pangolin', cursive;
+  user-select: none;
+}
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.item {
+  position: absolute;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  filter: brightness(0.9);
+  cursor: pointer;
+  user-select: none;
+}
+.item:hover {
+  transform: scale(1.05);
+  filter: brightness(1.15) drop-shadow(0 0 10px rgba(255,255,200,0.6));
+}
+#basket { left: 8%; top: 25%; width: 26%; z-index: 10; filter: drop-shadow(0px 10px 1px rgba(0,0,0,0.2)); }
+#pot { left: 33%; top: 20%; width: 36%; z-index: 1; filter: drop-shadow(0px 12px 1px rgba(0,0,0,0.2)); }
+#wand { left: 58%; top: 64%; width: 24%; transform: rotate(-20deg); z-index: 5; filter: drop-shadow(0px 8px 3px rgba(0,0,0,0.25)); }
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-      background-image: url('https://i.ibb.co/HprLk5vN/upscalemedia-transformed-2.png');
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: cover;
-      font-family: 'Pangolin', cursive;
-      user-select: none;
-    }
+.berry { position: absolute; width: 10%; cursor: grab; user-select: none; z-index: 20; pointer-events: auto; }
 
-    .container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
+.poof {
+  position: absolute;
+  pointer-events: none;
+  z-index: 25;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  max-width: 150px;
+  width: auto;
+  height: auto;
+}
 
-    .item {
-      position: absolute;
-      transition: transform 0.3s ease, filter 0.3s ease;
-      filter: brightness(0.9);
-      cursor: pointer;
-      user-select: none;
-    }
+#steam-text {
+  position: absolute;
+  top: 32%;
+  left: 75%;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  width: 24%;
+  padding: 18px 22px;
+  background-color: rgba(255,255,255,0.95);
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  font-family: 'Pangolin', cursive;
+  font-size: 16px;
+  line-height: 1.4;
+  pointer-events: none;
+  z-index: 30;
+  text-align: justify;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
 
-    .item:hover {
-      transform: scale(1.05);
-      filter: brightness(1.15) drop-shadow(0 0 10px rgba(255,255,200,0.6));
-    }
-
-    #basket {
-      left: 8%;
-      top: 25%;
-      width: 26%;
-      filter: drop-shadow(0px 10px 1px rgba(0,0,0,0.2));
-      z-index: 10;
-    }
-
-    #pot {
-      left: 33%;
-      top: 20%;
-      width: 36%;
-      filter: drop-shadow(0px 12px 1px rgba(0,0,0,0.2));
-      z-index: 1;
-    }
-
-    #wand {
-      left: 58%;
-      top: 64%;
-      width: 24%;
-      transform: rotate(-20deg);
-      filter: drop-shadow(0px 8px 3px rgba(0,0,0,0.25));
-      z-index: 5;
-    }
-
-    .berry {
-      position: absolute;
-      width: 10%;
-      cursor: grab;
-      user-select: none;
-      z-index: 20;
-      pointer-events: auto;
-    }
-
-    .poof {
-      position: absolute;
-      pointer-events: none;
-      z-index: 25;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-      max-width: 150px; /* максимум */
-      width: auto;
-      height: auto;
-    }
-
-    #steam-text {
-      position: absolute;
-      top: 32%;
-      left: 75%;
-      transform: translate(-50%, -50%) scale(0);
-      opacity: 0;
-      width: 22%;
-      padding: 18px 22px;
-      background-color: rgba(255,255,255,0.95);
-      border-radius: 20px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      font-family: 'Pangolin', cursive;
-      font-size: 16px;
-      line-height: 1.4;
-      pointer-events: none;
-      z-index: 30;
-      transition: transform 0.5s ease, opacity 0.5s ease;
-      text-align: justify;
-    }
-
-    #welcome-bubble h2 {
-      color: #7b3131;
-      margin: 0 0 8px 0;
-      font-size: 18px;
-    }
-
-    #welcome-bubble p {
-      margin: 0;
-    }
-  </style>
+#small-tip {
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  font-family: 'Pangolin', cursive;
+  background: rgba(0,0,0,0.3);
+  padding: 4px 8px;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+</style>
 </head>
 
 <body>
-  <div class="container">
-    <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
-    <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
-    <img id="wand" class="item" src="https://i.ibb.co/BVRr2VR2/Chat-GPT-Image-19-2025-08-36-05.png" alt="Волшебная палочка" />
+<div class="container">
+  <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
+  <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
+  <img id="wand" class="item" src="https://i.ibb.co/BVRr2VR2/Chat-GPT-Image-19-2025-08-36-05.png" alt="Волшебная палочка" />
 
-    <!-- Бабл с пожеланиями при добавлении ягод -->
-    <div id="steam-text"></div>
-
-    <!-- Приветственный бабл -->
-    <div id="welcome-bubble" style="
-      position:absolute; 
-      top:30%; left:50%; 
-      transform:translate(-50%, -50%) scale(1); 
-      opacity:1; 
-      width:24%; 
-      padding:18px 22px; 
-      background-color: rgba(255,255,255,0.95); 
-      border-radius:20px; 
-      box-shadow:0 4px 8px rgba(0,0,0,0.2); 
-      z-index:35; 
-      text-align:justify;
-      font-family:'Pangolin', cursive;
-      font-size:16px;
-      transition: transform 0.5s ease, opacity 0.5s ease;
-    ">
-      <h2>✨ Ягодка, мы рады приветствовать тебя на волшебной кухне! ✨</h2>
-      <p>Сегодня особенный день, поэтому у нас для тебя есть особенный рецепт. Давай приготовим бесконечное варенье! Сколько его не ешь, оно не закончится и всегда будет тебя радовать.</p>
-      <p>Просто добавляй ягоды в кастрюлю: 🍓👉🏻🥘</p>
-    </div>
+  <!-- Бабл с текстами и приветствие -->
+  <div id="steam-text">
+    <h2 style="color:#7b3131; margin:0 0 8px 0; font-size:18px;">
+    Ягодка, мы рады приветствовать тебя на волшебной кухне!
+    </h2>
+    <p>Сегодня особенный день, поэтому у нас для тебя есть особенный рецепт. Давай приготовим бесконечное варенье! Сколько его не ешь, оно не закончится и всегда будет тебя радовать.</p>
+    <p>Просто добавляй ягоды в кастрюлю: 🍓👉🏻🥘</p>
   </div>
 
+  <div id="small-tip"></div>
+</div>
+
 <script>
-  const basket = document.getElementById("basket");
-  const pot = document.getElementById("pot");
-  const container = document.querySelector(".container");
-  const steamText = document.getElementById("steam-text");
-  const welcomeBubble = document.getElementById("welcome-bubble");
+const basket = document.getElementById("basket");
+let pot = document.getElementById("pot");
+const wand = document.getElementById("wand");
+const container = document.querySelector(".container");
+const steamText = document.getElementById("steam-text");
+const smallTip = document.getElementById("small-tip");
 
-  const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png";
+const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png";
+const jamJarSrc = "https://i.ibb.co/GvHNg5vc/Chat-GPT-Image-19-2025-16-38-48.png";
 
-  const messages = [
-    "Джулс, с днем рождения! Пусть этот год принесёт тебе много сил, радости и крутых событий. Желаю ярких впечатлений, вдохновения во всём за что берёшься и крепкого здоровья.<br><br>Дина",
-    "Поздравляю с Днем Рождения! Кушайте много сладкого и пейте много вкусного в Ваш день 🎂<br><br>Аделин Эйвери",
-    "С днём рождения!!! Всего наилучшего и самого волшебного в жизни! :D<br><br>Герон Вайтмор",
-    "С днём рождения! Этот день, безусловно, особенный, но я хочу пожелать, чтобы внимание близких, подарки, веселье и лёгкость ты ощущала не только сегодня, но и в каждый свой день — чтобы каждый из них стал для тебя особенным.<br><br>Феликс Морган"
-  ];
+const messages = [
+  "Джулс, с днем рождения! Пусть этот год принесёт тебе много сил, радости и крутых событий. Желаю ярких впечатлений, вдохновения во всём за что берёшься и крепкого здоровья.<br><br>Дина",
+  "Поздравляю с Днем Рождения! Кушайте много сладкого и пейте много вкусного в Ваш день 🎂<br><br>Аделин Эйвери",
+  "С днём рождения!!! Всего наилучшего и самого волшебного в жизни! :D<br><br>Герон Вайтмор",
+  "С днём рождения! Этот день, безусловно, особенный, но я хочу пожелать, чтобы внимание близких, подарки, веселье и лёгкость ты ощущала не только сегодня, но и в каждый свой день — чтобы каждый из них стал для тебя особенным.<br><br>Феликс Морган"
+];
 
-  let currentBerry = null;
-  let bubbleIndex = 0;
-  let welcomeActive = true;
+let currentBerry = null;
+let bubbleIndex = 0;
+let firstClick = true;
+let lastBubble = false;
+let jamPlaced = false;
 
-  function hideWelcomeBubble() {
-    if (!welcomeActive) return;
-    welcomeActive = false;
-    welcomeBubble.style.transition = "transform 0.5s ease, opacity 0.5s ease";
-    welcomeBubble.style.transform = "translate(-50%, -50%) scale(0)";
-    welcomeBubble.style.opacity = "0";
-    setTimeout(() => welcomeBubble.remove(), 600);
+function hideSteamText() {
+  steamText.style.transform = "translate(-50%, -50%) scale(0)";
+  steamText.style.opacity = "0";
+  setTimeout(() => { steamText.innerHTML = ""; }, 500);
+}
+
+// Создание ягод
+basket.addEventListener("click", (e) => {
+  if(firstClick) { 
+    hideSteamText();
+    firstClick = false;
+    if(bubbleIndex >= messages.length) lastBubble = true;
   }
+  if(currentBerry) return;
+  createBerry(e);
+});
 
-  basket.addEventListener("click", (e) => {
-    hideWelcomeBubble();
-    if (currentBerry) return;
-    createBerry(e);
-  });
+// Создание и перемещение ягоды
+function createBerry(e){
+  const berry = document.createElement("img");
+  berry.src = berrySrc;
+  berry.className = "berry";
+  container.appendChild(berry);
+  currentBerry = berry;
+  moveBerry(berry, e);
 
-  function createBerry(e) {
-    const berry = document.createElement("img");
-    berry.src = berrySrc;
-    berry.className = "berry";
-    container.appendChild(berry);
-    currentBerry = berry;
+  berry.style.pointerEvents = "none";
 
-    moveBerryToMouse(berry, e);
-    berry.style.pointerEvents = "none";
-
-    function followMouse(ev) {
-      moveBerryToMouse(berry, ev);
-    }
-
-    function releaseBerry(ev) {
-      document.removeEventListener("mousemove", followMouse);
-      document.removeEventListener("mouseup", releaseBerry);
-      berry.style.pointerEvents = "auto";
-      checkDrop(berry);
-    }
-
-    document.addEventListener("mousemove", followMouse);
-    document.addEventListener("mouseup", releaseBerry);
+  function follow(ev){ moveBerry(berry, ev); }
+  function release(ev){ 
+    document.removeEventListener("mousemove", follow);
+    document.removeEventListener("mouseup", release);
+    berry.style.pointerEvents = "auto";
+    checkDrop(berry);
   }
+  document.addEventListener("mousemove", follow);
+  document.addEventListener("mouseup", release);
+}
 
-  function moveBerryToMouse(berry, e) {
-    const rect = container.getBoundingClientRect();
-    const size = berry.offsetWidth || 50;
-    const x = e.clientX - rect.left - size/2;
-    const y = e.clientY - rect.top - size/2;
-    berry.style.left = x + "px";
-    berry.style.top = y + "px";
-  }
+function moveBerry(berry, e){
+  const rect = container.getBoundingClientRect();
+  const size = berry.offsetWidth || 50;
+  berry.style.left = (e.clientX - rect.left - size/2) + "px";
+  berry.style.top = (e.clientY - rect.top - size/2) + "px";
+}
 
-  function checkDrop(berry) {
-    const berryRect = berry.getBoundingClientRect();
-    const potRect = pot.getBoundingClientRect();
+// Проверка попадания в кастрюлю
+function checkDrop(berry){
+  const berryRect = berry.getBoundingClientRect();
+  const potRect = pot.getBoundingClientRect();
 
-    const overlap =
-      berryRect.left < potRect.right &&
-      berryRect.right > potRect.left &&
-      berryRect.top < potRect.bottom &&
-      berryRect.bottom > potRect.top;
+  const overlap = berryRect.left < potRect.right &&
+                  berryRect.right > potRect.left &&
+                  berryRect.top < potRect.bottom &&
+                  berryRect.bottom > potRect.top;
 
-    if (overlap) {
-      const x = berryRect.left + berryRect.width/2;
-      const y = berryRect.top + berryRect.height/2;
-      triggerPoof(x, y);
-      berry.remove();
-      currentBerry = null;
-      showSteamText();
+  if(overlap){
+    const x = berryRect.left + berryRect.width/2;
+    const y = berryRect.top + berryRect.height/2;
+    triggerPoof(x, y, lastBubble ? 2 : 1);
+    berry.remove();
+    currentBerry = null;
+
+    if(lastBubble && !jamPlaced){
+      // Замена кастрюли на банку варенья
+      const newJar = document.createElement("img");
+      newJar.src = jamJarSrc;
+      newJar.style.position = "absolute";
+      newJar.style.left = pot.style.left;
+      newJar.style.top = pot.style.top;
+      newJar.style.width = pot.style.width;
+      newJar.style.zIndex = 1;
+      container.replaceChild(newJar, pot);
+      pot = newJar;
+      jamPlaced = true;
     } else {
-      currentBerry = null;
+      showSteamText();
     }
+  } else {
+    currentBerry = null;
   }
+}
 
-  function triggerPoof(x, y) {
-    const puff = document.createElement("img");
-    puff.src = "https://opengameart.org/sites/default/files/gif_4.gif";
-    puff.className = "poof";
-    container.appendChild(puff);
+// Пуф
+function triggerPoof(x, y, scale=1){
+  const puff = document.createElement("img");
+  puff.src = "https://opengameart.org/sites/default/files/gif_4.gif";
+  puff.className = "poof";
+  container.appendChild(puff);
 
-    const rect = container.getBoundingClientRect();
-    puff.onload = () => {
-      const puffWidth = puff.offsetWidth;
-      const puffHeight = puff.offsetHeight;
-      puff.style.left = (x - rect.left - puffWidth/2) + "px";
-      puff.style.top = (y - rect.top - puffHeight/2) + "px";
-      requestAnimationFrame(() => puff.style.opacity = "1");
-    };
+  const rect = container.getBoundingClientRect();
+  puff.onload = () => {
+    const w = puff.offsetWidth * scale;
+    const h = puff.offsetHeight * scale;
+    puff.style.width = w + "px";
+    puff.style.height = h + "px";
+    puff.style.left = (x - rect.left - w/2) + "px";
+    puff.style.top = (y - rect.top - h/2) + "px";
+    requestAnimationFrame(() => puff.style.opacity = "1");
+  };
 
-    setTimeout(() => {
-      puff.style.opacity = "0";
-      setTimeout(() => puff.remove(), 400);
-    }, 600);
-  }
+  setTimeout(() => { puff.style.opacity = "0"; setTimeout(()=>puff.remove(),400); }, 600);
+}
 
-  function showSteamText() {
-    if (bubbleIndex >= messages.length) bubbleIndex = 0;
-    steamText.innerHTML = messages[bubbleIndex];
-    bubbleIndex++;
-
-    steamText.style.transition = "none";
-    steamText.style.transform = "translate(-50%, -50%) scale(0)";
-    steamText.style.opacity = "0";
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        steamText.style.transition = "transform 0.5s ease, opacity 0.5s ease";
-        steamText.style.transform = "translate(-50%, -50%) scale(1)";
-        steamText.style.opacity = "1";
-      });
+// Отображение текста бабла
+function showSteamText(){
+  if(bubbleIndex >= messages.length) bubbleIndex = messages.length - 1;
+  steamText.innerHTML = messages[bubbleIndex];
+  bubbleIndex++;
+  lastBubble = (bubbleIndex === messages.length);
+  steamText.style.transition = "none";
+  steamText.style.transform = "translate(-50%, -50%) scale(0)";
+  steamText.style.opacity = "0";
+  requestAnimationFrame(()=> {
+    requestAnimationFrame(()=>{
+      steamText.style.transition = "transform 0.5s ease, opacity 0.5s ease";
+      steamText.style.transform = "translate(-50%, -50%) scale(1)";
+      steamText.style.opacity = "1";
     });
-  }
+  });
+}
 
+// Кликабельная палочка
+wand.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if(!lastBubble || jamPlaced) return;
+  // при последнем бабле на кастрюлю пуф большой
+  triggerPoof(pot.getBoundingClientRect().left + pot.offsetWidth/2,
+              pot.getBoundingClientRect().top + pot.offsetHeight/2, 2);
+  const newJar = document.createElement("img");
+  newJar.src = jamJarSrc;
+  newJar.style.position = "absolute";
+  newJar.style.left = pot.style.left;
+  newJar.style.top = pot.style.top;
+  newJar.style.width = pot.style.width;
+  newJar.style.zIndex = 1;
+  container.replaceChild(newJar, pot);
+  pot = newJar;
+  jamPlaced = true;
+});
+
+// Маленький текст "ещё не время 🪄"
+wand.addEventListener("mousedown", (e)=>{
+  if(lastBubble && !jamPlaced) return;
+  smallTip.innerText = "ещё не время 🪄";
+  smallTip.style.left = (e.clientX + 10) + "px";
+  smallTip.style.top = (e.clientY - 20) + "px";
+  smallTip.style.opacity = "1";
+  setTimeout(()=>{ smallTip.style.opacity="0"; }, 1000);
+});
 </script>
 </body>
 </html>
