@@ -297,8 +297,8 @@ function transformPotToJam() {
   const newJar = document.createElement("img");
   newJar.src = jamJarSrc;
   newJar.style.position = "absolute";
-  newJar.style.left = "35%";
-  newJar.style.top = "20%";
+  newJar.style.left = "37%";
+  newJar.style.top = "15%";
   newJar.style.width = "25%";
   newJar.style.zIndex = 1;
 
@@ -333,7 +333,7 @@ function triggerPoof(x, y, scale = 1) {
     const w = puff.offsetWidth * scale;
     const h = puff.offsetHeight * scale;
     puff.style.width = w + "px";
-    puff.style.height = h + "px";
+    puff.style.height = "auto"
     puff.style.left = (x - rect.left - w / 2) + "px";
     puff.style.top = (y - rect.top - h / 2) + "px";
     requestAnimationFrame(() => puff.style.opacity = "1");
