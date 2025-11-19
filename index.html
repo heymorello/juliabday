@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>С днём рождения, Джулс!</title>
 <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
 <style>
@@ -38,11 +38,23 @@ body {
 #pot { left: 33%; top: 20%; width: 36%; z-index: 1; filter: drop-shadow(0px 12px 1px rgba(0,0,0,0.2)); }
 #wand { left: 58%; top: 64%; width: 24%; transform: rotate(-20deg); z-index: 5; filter: drop-shadow(0px 8px 3px rgba(0,0,0,0.25)); }
 #wand:hover { transform: rotate(-20deg) scale(1.05); }
+
 .berry { position: absolute; width: 10%; cursor: grab; user-select: none; z-index: 20; pointer-events: auto; }
-.poof { position: absolute; pointer-events: none; z-index: 25; opacity: 0; transition: opacity 0.6s ease; max-width: 150px; width: auto; height: auto; }
+
+.poof {
+  position: absolute;
+  pointer-events: none;
+  z-index: 25;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  max-width: 150px;
+  width: auto;
+  height: auto;
+}
+
 #steam-text {
   position: absolute;
-  top: 20%;
+  top: 25%;
   left: 75%;
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
@@ -59,6 +71,7 @@ body {
   text-align: justify;
   transition: transform 0.5s ease, opacity 0.5s ease;
 }
+
 #small-tip {
   position: absolute;
   color: white;
@@ -71,11 +84,12 @@ body {
 }
 </style>
 </head>
+
 <body>
 <div class="container">
-  <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка">
-  <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля">
-  <img id="wand" class="item" src="https://i.ibb.co/BVRr2VR2/Chat-GPT-Image-19-2025-08-36-05.png" alt="Волшебная палочка">
+  <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
+  <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
+  <img id="wand" class="item" src="https://i.ibb.co/BVRr2VR2/Chat-GPT-Image-19-2025-08-36-05.png" alt="Волшебная палочка" />
 
   <div id="steam-text">
     <h2 style="color:#7b3131; margin:0 0 8px 0; font-size:18px;">
@@ -100,74 +114,50 @@ const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png"
 const jamJarSrc = "https://i.ibb.co/GvHNg5vc/Chat-GPT-Image-19-2025-16-38-48.png";
 
 const messages = [
-  "Джулс, первый бабл!",
-  "Вторая порция магии!",
-  "Последняя ягодка! Готовь палочку..."
+  "Джулс, с днем рождения! Пусть этот год принесёт тебе много сил, радости и крутых событий. Желаю ярких впечатлений, вдохновения во всём за что берёшься и крепкого здоровья.<br><br>Дина",
+  "Поздравляю с Днем Рождения! Кушайте много сладкого и пейте много вкусного в Ваш день 🎂<br><br>Аделин Эйвери",
+  "С днём рождения!!! Всего наилучшего и самого волшебного в жизни! :D<br><br>Герон Вайтмор",
+  "С днём рождения! Этот день, безусловно, особенный, но я хочу пожелать, чтобы внимание близких, подарки, веселье и лёгкость ты ощущала не только сегодня, но и в каждый свой день — чтобы каждый из них стал для тебя особенным.<br><br>Феликс Морган"
 ];
 
 let currentBerry = null;
 let bubbleIndex = 0;
+let firstClick = true;
 let lastBubble = false;
+let jamPlaced = false;
 let berriesDisabled = false;
-let wandInHand = false;
 
-// Показываем бабл
-function showSteamText(text){
-  steamText.innerHTML = text;
-  steamText.style.transition = "none";
-  steamText.style.transform = "translate(-50%, -50%) scale(0)";
-  steamText.style.opacity = "0";
-  requestAnimationFrame(() => {
-    requestAnimationFrame(()=>{
-      steamText.style.transition = "transform 0.5s ease, opacity 0.5s ease";
-      steamText.style.transform = "translate(-50%, -50%) scale(1)";
-      steamText.style.opacity = "1";
-    });
-  });
-}
+let wandPicked = false;
 
-// Пуф
-function triggerPoof(x, y, scale=1){
-  const puff = document.createElement("img");
-  puff.src = "https://opengameart.org/sites/default/files/gif_4.gif";
-  puff.className = "poof";
-  container.appendChild(puff);
-  puff.onload = () => {
-    const w = puff.offsetWidth * scale;
-    const h = puff.offsetHeight * scale;
-    puff.style.width = w + "px";
-    puff.style.height = h + "px";
-    puff.style.left = (x - w/2) + "px";
-    puff.style.top = (y - h/2) + "px";
-    requestAnimationFrame(() => puff.style.opacity = "1");
-  };
-  setTimeout(() => { puff.style.opacity = "0"; setTimeout(()=>puff.remove(),400); }, 600);
-}
+// -------------------- КЛИК ПО КОРЗИНЕ --------------------
+basket.addEventListener("click", (e) => {
+  if (firstClick) {
+    hideSteamText();
+    firstClick = false;
+  }
 
-// Приветственный бабл сразу
-showSteamText(steamText.innerHTML);
-
-// Ягоды
-basket.addEventListener("click", (e)=>{
-  if(berriesDisabled) {
+  if (berriesDisabled) {
     showTip(e.clientX, e.clientY, "ягоды достаточно 🍓");
     return;
   }
+  if (currentBerry) return;
+
   createBerry(e);
 });
 
-function createBerry(e){
-  if(currentBerry) return;
+// -------------------- ЯГОДА --------------------
+function createBerry(e) {
   const berry = document.createElement("img");
   berry.src = berrySrc;
   berry.className = "berry";
   container.appendChild(berry);
   currentBerry = berry;
+
   moveBerry(berry, e);
   berry.style.pointerEvents = "none";
 
-  function follow(ev){ moveBerry(berry, ev); }
-  function release(ev){ 
+  function follow(ev) { moveBerry(berry, ev); }
+  function release(ev) {
     document.removeEventListener("mousemove", follow);
     document.removeEventListener("mouseup", release);
     berry.style.pointerEvents = "auto";
@@ -177,84 +167,169 @@ function createBerry(e){
   document.addEventListener("mouseup", release);
 }
 
-function moveBerry(berry, e){
+function moveBerry(berry, e) {
   const rect = container.getBoundingClientRect();
   const size = berry.offsetWidth || 50;
-  berry.style.left = (e.clientX - rect.left - size/2) + "px";
-  berry.style.top = (e.clientY - rect.top - size/2) + "px";
+  berry.style.left = (e.clientX - rect.left - size / 2) + "px";
+  berry.style.top = (e.clientY - rect.top - size / 2) + "px";
 }
 
-function checkDrop(berry){
+function checkDrop(berry) {
   const berryRect = berry.getBoundingClientRect();
   const potRect = pot.getBoundingClientRect();
-  const overlap = berryRect.left < potRect.right &&
-                  berryRect.right > potRect.left &&
-                  berryRect.top < potRect.bottom &&
-                  berryRect.bottom > potRect.top;
-  if(overlap){
-    triggerPoof(berryRect.left + berryRect.width/2, berryRect.top + berryRect.height/2);
+
+  const overlap =
+    berryRect.left < potRect.right &&
+    berryRect.right > potRect.left &&
+    berryRect.top < potRect.bottom &&
+    berryRect.bottom > potRect.top;
+
+  if (overlap) {
+    const x = berryRect.left + berryRect.width / 2;
+    const y = berryRect.top + berryRect.height / 2;
+
+    triggerPoof(x, y, lastBubble ? 2 : 1);
+
     berry.remove();
     currentBerry = null;
-    if(bubbleIndex < messages.length){
-      showSteamText(messages[bubbleIndex]);
-      bubbleIndex++;
-      if(bubbleIndex === messages.length) lastBubble = true;
+
+    if (!lastBubble) {
+      showSteamText();
+      lastBubble = bubbleIndex >= messages.length;
     } else {
-      lastBubble = true;
+      showTip(potRect.left + potRect.width / 2, potRect.top, "теперь палочка 🪄");
     }
   } else {
     currentBerry = null;
   }
 }
 
-// Палочка
-wand.addEventListener("mousedown", (e)=>{
-  if(!lastBubble || wandInHand) return;
-  wandInHand = true;
-  const wandClone = wand.cloneNode(true);
-  wandClone.style.pointerEvents = "none";
-  container.appendChild(wandClone);
-  const rect = container.getBoundingClientRect();
+// -------------------- БАБЛ --------------------
+function showSteamText() {
+  steamText.innerHTML = messages[bubbleIndex];
+  bubbleIndex++;
+  lastBubble = bubbleIndex === messages.length;
 
-  function follow(ev){
-    wandClone.style.left = (ev.clientX - rect.left - wandClone.offsetWidth/2) + "px";
-    wandClone.style.top = (ev.clientY - rect.top - wandClone.offsetHeight/2) + "px";
-  }
+  steamText.style.transition = "none";
+  steamText.style.transform = "translate(-50%, -50%) scale(0)";
+  steamText.style.opacity = "0";
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      steamText.style.transition = "transform 0.5s ease, opacity 0.5s ease";
+      steamText.style.transform = "translate(-50%, -50%) scale(1)";
+      steamText.style.opacity = "1";
+    });
+  });
+}
 
-  function release(ev){
-    const potRect = pot.getBoundingClientRect();
-    if(ev.clientX > potRect.left && ev.clientX < potRect.right &&
-       ev.clientY > potRect.top && ev.clientY < potRect.bottom){
-         // Замена кастрюли на банку варенья
-         const jar = document.createElement("img");
-         jar.src = jamJarSrc;
-         jar.style.position = "absolute";
-         jar.style.left = pot.style.left;
-         jar.style.top = pot.style.top;
-         jar.style.width = pot.style.width;
-         jar.style.zIndex = 1;
-         container.replaceChild(jar, pot);
-         pot = jar;
-         triggerPoof(potRect.left + potRect.width/2, potRect.top + potRect.height/2, 2);
-         berriesDisabled = true;
-    }
-    wandClone.remove();
-    wandInHand = false;
-    document.removeEventListener("mousemove", follow);
-    document.removeEventListener("mouseup", release);
-  }
+function hideSteamText() {
+  steamText.style.transform = "translate(-50%, -50%) scale(0)";
+  steamText.style.opacity = "0";
+  setTimeout(() => { steamText.innerHTML = ""; }, 500);
+}
 
-  document.addEventListener("mousemove", follow);
-  document.addEventListener("mouseup", release);
+// -------------------- ПАЛОЧКА --------------------
+wand.addEventListener("click", (e) => {
+  if (!lastBubble || jamPlaced) return;
+  pickWand(e);
 });
 
-// Малые подсказки
-function showTip(x,y,text){
+function pickWand(e) {
+  wandPicked = true;
+  wand.style.pointerEvents = "none";
+  wand.style.transition = "none";
+
+  followWand(e);
+
+  function move(ev) { followWand(ev); }
+  function drop(ev) {
+    document.removeEventListener("mousemove", move);
+    document.removeEventListener("mouseup", drop);
+    checkWandUse(ev);
+  }
+
+  document.addEventListener("mousemove", move);
+  document.addEventListener("mouseup", drop);
+}
+
+function followWand(e) {
+  const rect = container.getBoundingClientRect();
+  const w = wand.offsetWidth;
+  wand.style.left = (e.clientX - rect.left - w / 2) + "px";
+  wand.style.top = (e.clientY - rect.top - w / 4) + "px";
+}
+
+// -------------------- ИСПОЛЬЗОВАНИЕ ПАЛОЧКИ --------------------
+function checkWandUse(e) {
+  const wandRect = wand.getBoundingClientRect();
+  const potRect = pot.getBoundingClientRect();
+
+  const overlap =
+    wandRect.left < potRect.right &&
+    wandRect.right > potRect.left &&
+    wandRect.top < potRect.bottom &&
+    wandRect.bottom > potRect.top;
+
+  if (overlap) {
+    transformPotToJam();
+  } else {
+    showTip(e.clientX, e.clientY, "к кастрюле 🥘🪄");
+  }
+}
+
+function transformPotToJam() {
+  triggerPoof(
+    pot.getBoundingClientRect().left + pot.offsetWidth / 2,
+    pot.getBoundingClientRect().top + pot.offsetHeight / 2,
+    2
+  );
+
+  const newJar = document.createElement("img");
+  newJar.src = jamJarSrc;
+  newJar.style.position = "absolute";
+  newJar.style.left = pot.style.left;
+  newJar.style.top = pot.style.top;
+  newJar.style.width = pot.style.width;
+  newJar.style.zIndex = 1;
+
+  container.replaceChild(newJar, pot);
+  pot = newJar;
+
+  jamPlaced = true;
+  berriesDisabled = true;
+}
+
+// -------------------- ПОФ --------------------
+function triggerPoof(x, y, scale = 1) {
+  const puff = document.createElement("img");
+  puff.src = "https://opengameart.org/sites/default/files/gif_4.gif";
+  puff.className = "poof";
+  container.appendChild(puff);
+
+  const rect = container.getBoundingClientRect();
+  puff.onload = () => {
+    const w = puff.offsetWidth * scale;
+    const h = puff.offsetHeight * scale;
+    puff.style.width = w + "px";
+    puff.style.height = h + "px";
+    puff.style.left = (x - rect.left - w / 2) + "px";
+    puff.style.top = (y - rect.top - h / 2) + "px";
+    requestAnimationFrame(() => puff.style.opacity = "1");
+  };
+
+  setTimeout(() => {
+    puff.style.opacity = "0";
+    setTimeout(() => puff.remove(), 400);
+  }, 600);
+}
+
+// -------------------- ПОДСКАЗКИ --------------------
+function showTip(x, y, text) {
   smallTip.innerText = text;
   smallTip.style.left = x + "px";
   smallTip.style.top = y - 20 + "px";
   smallTip.style.opacity = "1";
-  setTimeout(()=>{ smallTip.style.opacity="0"; }, 1000);
+  setTimeout(() => (smallTip.style.opacity = "0"), 1000);
 }
 </script>
 </body>
