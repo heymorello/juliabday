@@ -15,6 +15,7 @@
       background-repeat: no-repeat;
       background-position: center center;
       background-size: cover;
+      user-select: none;
     }
 
     .container {
@@ -54,6 +55,17 @@
       z-index: 1;
     }
 
+    /* Волшебная палочка */
+    #wand {
+      position: absolute;
+      left: 63%;
+      top: 55%;
+      width: 18%;
+      transform: rotate(-20deg);
+      filter: drop-shadow(0px 8px 3px rgba(0,0,0,0.25));
+      z-index: 5;
+    }
+
     /* Клубника */
     .berry {
       position: absolute;
@@ -64,25 +76,55 @@
       z-index: 20;
     }
 
-    /* Облако с текстом */
-    .steam-text {
+    /* Облако-текст (как комикс-бабл) */
+    #steam-text {
       position: absolute;
-      top: 15%; /* над кастрюлей */
-      left: 50%;
+      top: 32%;
+      left: 75%;
       transform: translate(-50%, -50%) scale(0);
-      padding: 15px 20px;
-      background-color: rgba(255,255,255,0.9);
+      opacity: 0;
+
+      width: 22%;
+      padding: 18px 22px;
+
+      background-color: rgba(255,255,255,0.95);
       border-radius: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+
       font-family: sans-serif;
       font-size: 16px;
       line-height: 1.4;
-      color: #000;
       text-align: center;
+
       pointer-events: none;
       z-index: 30;
       transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    /* Хвостик бабла */
+    #steam-text::after {
+      content: "";
+      position: absolute;
+      bottom: -12px;
+      left: 15%;
+
+      width: 0;
+      height: 0;
+
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 12px solid rgba(255,255,255,0.95);
+    }
+
+    /* Пуф */
+    .poof {
+      position: absolute;
+      width: 14%;
+      pointer-events: none;
+      z-index: 25;
+      transform: translate(-50%, -50%) scale(0);
       opacity: 0;
+      transition: transform 0.4s ease, opacity 0.4s ease;
     }
   </style>
 </head>
@@ -92,9 +134,13 @@
     <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
     <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
 
-    <!-- Облако с текстом -->
-    <div id="steam-text" class="steam-text">
-      После квиддича Дина словно летела по школьным коридорам в направлении своей башни. Не на метле, но всегда, кстати, мечтала полетать по школе, но увы.
+    <!-- Волшебная палочка -->
+    <img id="wand" class="item" src="https://i.ibb.co/BVRr2VR2/Chat-GPT-Image-19-2025-08-36-05.png" alt="Волшебная палочка" />
+
+    <!-- Пар и текст-бабл -->
+    <div id="steam-text">
+      После квиддича Дина словно летела по школьным коридорам в направлении своей башни. 
+      Не на метле, но всегда, кстати, мечтала полетать по школе, но увы.
     </div>
   </div>
 
@@ -105,9 +151,11 @@
   const steamText = document.getElementById("steam-text");
 
   const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png";
+  const poofSrc = "https://i.ibb.co/4fQnZ1f/cloud.png"; // можно заменить на любое облачко
+
   let currentBerry = null;
 
-  // Клик по корзине
+  // КЛИК ПО КОРЗИНЕ — создаём клубнику
   basket.addEventListener("click", (e) => {
     if (currentBerry) return;
     createAndAttachBerry(e);
@@ -122,6 +170,7 @@
     currentBerry = berry;
 
     moveBerryToMouse(berry, e);
+
     berry.style.pointerEvents = "none";
 
     function followMouse(ev) {
@@ -139,12 +188,14 @@
     document.addEventListener("mouseup", releaseBerry);
   }
 
+  // Перемещение ягоды за мышью
   function moveBerryToMouse(berry, e) {
     const size = berry.offsetWidth || 50;
     berry.style.left = (e.clientX - size / 2) + "px";
     berry.style.top = (e.clientY - size / 2) + "px";
   }
 
+  // Проверка попадания в кастрюлю
   function checkDrop(berry) {
     const berryRect = berry.getBoundingClientRect();
     const potRect = pot.getBoundingClientRect();
@@ -156,25 +207,42 @@
       berryRect.bottom > potRect.top;
 
     if (overlap) {
-      berry.style.transition = "0.25s";
-      berry.style.transform = "scale(0)";
-      setTimeout(() => {
-        berry.remove();
-        currentBerry = null;
-        showSteamText(); // показываем облако с текстом
-      }, 250);
+      triggerPoof(berryRect.left, berryRect.top);
+      berry.remove();
+      currentBerry = null;
+      showSteamText();
     } else {
       currentBerry = null;
     }
   }
 
-  function showSteamText() {
-    steamText.style.opacity = 1;
-    steamText.style.transform = "translate(-50%, -50%) scale(1)";
+  // ПУФ-Анимация
+  function triggerPoof(x, y) {
+    const puff = document.createElement("img");
+    puff.src = "https://i.ibb.co/pxmjQ42/poof.png"; // красивое облачко
+    puff.className = "poof";
+
+    container.appendChild(puff);
+
+    puff.style.left = x + "px";
+    puff.style.top = y + "px";
+
+    requestAnimationFrame(() => {
+      puff.style.transform = "translate(-50%, -50%) scale(1)";
+      puff.style.opacity = "1";
+    });
+
     setTimeout(() => {
-      steamText.style.opacity = 0;
-      steamText.style.transform = "translate(-50%, -50%) scale(0)";
-    }, 2000); // облако исчезает через 2 секунды
+      puff.style.transform = "translate(-50%, -50%) scale(0.1)";
+      puff.style.opacity = "0";
+      setTimeout(() => puff.remove(), 400);
+    }, 300);
+  }
+
+  // ПОЯВЛЕНИЕ БАБЛА
+  function showSteamText() {
+    steamText.style.transform = "translate(-50%, -50%) scale(1)";
+    steamText.style.opacity = "1";
   }
 </script>
 
