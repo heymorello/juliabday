@@ -280,11 +280,6 @@ function checkWandUse(e) {
     wandRect.top < potRect.bottom &&
     wandRect.bottom > potRect.top;
 
-  if (overlap) {
-    transformPotToJam();
-  } else {
-    showTip(e.clientX, e.clientY, "к кастрюле 🥘🪄");
-  }
 }
 
 function transformPotToJam() {
@@ -297,8 +292,8 @@ function transformPotToJam() {
   const newJar = document.createElement("img");
   newJar.src = jamJarSrc;
   newJar.style.position = "absolute";
-  newJar.style.left = "45%";
-  newJar.style.top = "30%";
+  newJar.style.left = "40%";
+  newJar.style.top = "40%";
   newJar.style.width = "25%";
   newJar.style.zIndex = 1;
 
@@ -353,6 +348,21 @@ function showTip(x, y, text) {
   smallTip.style.opacity = "1";
   setTimeout(() => (smallTip.style.opacity = "0"), 1000);
 }
+
+// Клик по палочке (до того как пользователь её взял)
+wand.addEventListener("mousedown", (e) => {
+  if (!wandPicked) {
+    showTip(e.clientX, e.clientY, "ещё не время 🪄");
+  }
+});
+
+// Клик по корзине, когда варенье уже полно ягод
+basket.addEventListener("click", (e) => {
+  if (berriesDisabled) {
+    showTip(e.clientX, e.clientY, "варенье уже полно ягод 🍓");
+    return;
+  }
+});
 </script>
 
 </body>
