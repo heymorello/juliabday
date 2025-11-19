@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>С днём рождения, Джулс!</title>
 <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
 <style>
@@ -38,13 +38,11 @@ body {
 #pot { left: 33%; top: 20%; width: 36%; z-index: 1; filter: drop-shadow(0px 12px 1px rgba(0,0,0,0.2)); }
 #wand { left: 58%; top: 64%; width: 24%; transform: rotate(-20deg); z-index: 5; filter: drop-shadow(0px 8px 3px rgba(0,0,0,0.25)); }
 #wand:hover { transform: rotate(-20deg) scale(1.05); }
-
 .berry { position: absolute; width: 10%; cursor: grab; user-select: none; z-index: 20; pointer-events: auto; }
 .poof { position: absolute; pointer-events: none; z-index: 25; opacity: 0; transition: opacity 0.6s ease; max-width: 150px; width: auto; height: auto; }
-
 #steam-text {
   position: absolute;
-  top: 25%;
+  top: 20%;
   left: 75%;
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
@@ -61,7 +59,6 @@ body {
   text-align: justify;
   transition: transform 0.5s ease, opacity 0.5s ease;
 }
-
 #small-tip {
   position: absolute;
   color: white;
@@ -76,14 +73,13 @@ body {
 </head>
 <body>
 <div class="container">
-  <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка" />
-  <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля" />
-  <img id="wand" class="item" src="https://i.ibb.co/BVRr2VR2/Chat-GPT-Image-19-2025-08-36-05.png" alt="Волшебная палочка" />
+  <img id="basket" class="item" src="https://i.ibb.co/hxdH1ChV/Chat-GPT-Image-17-2025-19-07-18.png" alt="Корзинка">
+  <img id="pot" class="item" src="https://i.ibb.co/6JyrTSmY/rfcnh-kz1.gif" alt="Кастрюля">
+  <img id="wand" class="item" src="https://i.ibb.co/BVRr2VR2/Chat-GPT-Image-19-2025-08-36-05.png" alt="Волшебная палочка">
 
-  <!-- Бабл с текстами и приветствие -->
   <div id="steam-text">
     <h2 style="color:#7b3131; margin:0 0 8px 0; font-size:18px;">
-    Ягодка, мы рады приветствовать тебя на волшебной кухне!
+      ✨ Ягодка, мы рады приветствовать тебя на волшебной кухне! ✨
     </h2>
     <p>Сегодня особенный день, поэтому у нас для тебя есть особенный рецепт. Давай приготовим бесконечное варенье! Сколько его не ешь, оно не закончится и всегда будет тебя радовать.</p>
     <p>Просто добавляй ягоды в кастрюлю: 🍓👉🏻🥘</p>
@@ -104,19 +100,18 @@ const berrySrc = "https://i.ibb.co/Hfdh9TPG/Chat-GPT-Image-17-2025-19-01-18.png"
 const jamJarSrc = "https://i.ibb.co/GvHNg5vc/Chat-GPT-Image-19-2025-16-38-48.png";
 
 const messages = [
-  "Поздравляем! Первый бабл.",
-  "Следующий бабл.",
-  "И последний бабл — скоро магия!"
+  "Джулс, первый бабл!",
+  "Вторая порция магии!",
+  "Последняя ягодка! Готовь палочку..."
 ];
 
 let currentBerry = null;
 let bubbleIndex = 0;
-let firstClick = true;
 let lastBubble = false;
 let berriesDisabled = false;
 let wandInHand = false;
 
-// Функция показа бабла
+// Показываем бабл
 function showSteamText(text){
   steamText.innerHTML = text;
   steamText.style.transition = "none";
@@ -131,7 +126,7 @@ function showSteamText(text){
   });
 }
 
-// Функция пуфа
+// Пуф
 function triggerPoof(x, y, scale=1){
   const puff = document.createElement("img");
   puff.src = "https://opengameart.org/sites/default/files/gif_4.gif";
@@ -149,17 +144,12 @@ function triggerPoof(x, y, scale=1){
   setTimeout(() => { puff.style.opacity = "0"; setTimeout(()=>puff.remove(),400); }, 600);
 }
 
-// --------------------
-// Логика ягод
+// Приветственный бабл сразу
+showSteamText(steamText.innerHTML);
+
+// Ягоды
 basket.addEventListener("click", (e)=>{
-  if(firstClick){
-    firstClick = false;
-    showSteamText(messages[bubbleIndex]);
-    bubbleIndex++;
-    return;
-  }
-  if(bubblesDisabled) return;
-  if(lastBubble && !wandInHand) {
+  if(berriesDisabled) {
     showTip(e.clientX, e.clientY, "ягоды достаточно 🍓");
     return;
   }
@@ -217,8 +207,7 @@ function checkDrop(berry){
   }
 }
 
-// --------------------
-// Логика палочки
+// Палочка
 wand.addEventListener("mousedown", (e)=>{
   if(!lastBubble || wandInHand) return;
   wandInHand = true;
@@ -259,7 +248,7 @@ wand.addEventListener("mousedown", (e)=>{
   document.addEventListener("mouseup", release);
 });
 
-// --------------------
+// Малые подсказки
 function showTip(x,y,text){
   smallTip.innerText = text;
   smallTip.style.left = x + "px";
