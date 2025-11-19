@@ -364,7 +364,7 @@ function returnWandHome() {
 }
 
 // -------------------- ПОФ --------------------
-function triggerPoof(x, y, 10) {
+function triggerPoof(x, y, scale = 10) {
   const puff = document.createElement("img");
   puff.src = "https://opengameart.org/sites/default/files/gif_4.gif";
   puff.className = "poof";
