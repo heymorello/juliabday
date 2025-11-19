@@ -148,13 +148,38 @@ basket.addEventListener("click", (e) => {
   }
 
   if (berriesDisabled) {
-    showTip(e.clientX, e.clientY, "ягоды достаточно 🍓");
+    showTip(e.clientX, e.clientY, "");
     return;
   }
   if (currentBerry) return;
 
   createBerry(e);
 });
+
+  function showSteamText() {
+  steamText.innerHTML = messages[bubbleIndex];
+  
+  bubbleIndex++;
+  lastBubble = bubbleIndex >= messages.length;
+
+  steamText.style.transition = "none";
+  steamText.style.transform = "translate(-50%, -50%) scale(0)";
+  steamText.style.opacity = "0";
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      steamText.style.transition = "transform 0.5s ease, opacity 0.5s ease";
+      steamText.style.transform = "translate(-50%, -50%) scale(1)";
+      steamText.style.opacity = "1";
+    });
+  });
+
+  // Если последний бабл, сразу включаем подсказку и блокировку ягод
+  if (lastBubble) {
+    berriesDisabled = true;
+    const potRect = pot.getBoundingClientRect();
+    showTip(potRect.left + potRect.width / 2, potRect.top, "в варенье полно ягод 🍓");
+  }
+}
 
 // -------------------- ЯГОДА --------------------
 function createBerry(e) {
