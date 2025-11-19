@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>С днём рождения, Джулс!</title>
 <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
-
 <style>
 body {
   margin: 0;
@@ -38,6 +37,7 @@ body {
 #basket { left: 8%; top: 25%; width: 26%; z-index: 10; filter: drop-shadow(0px 10px 1px rgba(0,0,0,0.2)); }
 #pot { left: 33%; top: 20%; width: 36%; z-index: 1; filter: drop-shadow(0px 12px 1px rgba(0,0,0,0.2)); }
 #wand { left: 58%; top: 64%; width: 24%; transform: rotate(-20deg); z-index: 5; filter: drop-shadow(0px 8px 3px rgba(0,0,0,0.25)); }
+#wand:hover { transform: rotate(-20deg) scale(1.05); }
 
 .berry { position: absolute; width: 10%; cursor: grab; user-select: none; z-index: 20; pointer-events: auto; }
 
@@ -54,7 +54,7 @@ body {
 
 #steam-text {
   position: absolute;
-  top: 32%;
+  top: 25%; /* подняли баблы выше */
   left: 75%;
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
@@ -77,9 +77,6 @@ body {
   color: white;
   font-size: 14px;
   font-family: 'Pangolin', cursive;
-  background: rgba(0,0,0,0.3);
-  padding: 4px 8px;
-  border-radius: 8px;
   pointer-events: none;
   z-index: 50;
   opacity: 0;
@@ -97,7 +94,7 @@ body {
   <!-- Бабл с текстами и приветствие -->
   <div id="steam-text">
     <h2 style="color:#7b3131; margin:0 0 8px 0; font-size:18px;">
-    Ягодка, мы рады приветствовать тебя на волшебной кухне!
+      ✨ Ягодка, мы рады приветствовать тебя на волшебной кухне! ✨
     </h2>
     <p>Сегодня особенный день, поэтому у нас для тебя есть особенный рецепт. Давай приготовим бесконечное варенье! Сколько его не ешь, оно не закончится и всегда будет тебя радовать.</p>
     <p>Просто добавляй ягоды в кастрюлю: 🍓👉🏻🥘</p>
@@ -129,6 +126,7 @@ let bubbleIndex = 0;
 let firstClick = true;
 let lastBubble = false;
 let jamPlaced = false;
+let berriesDisabled = false;
 
 function hideSteamText() {
   steamText.style.transform = "translate(-50%, -50%) scale(0)";
@@ -136,18 +134,21 @@ function hideSteamText() {
   setTimeout(() => { steamText.innerHTML = ""; }, 500);
 }
 
-// Создание ягод
+// Клик по корзине
 basket.addEventListener("click", (e) => {
   if(firstClick) { 
     hideSteamText();
     firstClick = false;
     if(bubbleIndex >= messages.length) lastBubble = true;
   }
+  if(berriesDisabled) {
+    showTip(e.clientX, e.clientY, "ягоды достаточно 🍓");
+    return;
+  }
   if(currentBerry) return;
   createBerry(e);
 });
 
-// Создание и перемещение ягоды
 function createBerry(e){
   const berry = document.createElement("img");
   berry.src = berrySrc;
@@ -176,7 +177,6 @@ function moveBerry(berry, e){
   berry.style.top = (e.clientY - rect.top - size/2) + "px";
 }
 
-// Проверка попадания в кастрюлю
 function checkDrop(berry){
   const berryRect = berry.getBoundingClientRect();
   const potRect = pot.getBoundingClientRect();
@@ -194,7 +194,7 @@ function checkDrop(berry){
     currentBerry = null;
 
     if(lastBubble && !jamPlaced){
-      // Замена кастрюли на банку варенья
+      // Банка варенья под размер кастрюли
       const newJar = document.createElement("img");
       newJar.src = jamJarSrc;
       newJar.style.position = "absolute";
@@ -205,6 +205,7 @@ function checkDrop(berry){
       container.replaceChild(newJar, pot);
       pot = newJar;
       jamPlaced = true;
+      berriesDisabled = true;
     } else {
       showSteamText();
     }
@@ -213,7 +214,6 @@ function checkDrop(berry){
   }
 }
 
-// Пуф
 function triggerPoof(x, y, scale=1){
   const puff = document.createElement("img");
   puff.src = "https://opengameart.org/sites/default/files/gif_4.gif";
@@ -234,7 +234,6 @@ function triggerPoof(x, y, scale=1){
   setTimeout(() => { puff.style.opacity = "0"; setTimeout(()=>puff.remove(),400); }, 600);
 }
 
-// Отображение текста бабла
 function showSteamText(){
   if(bubbleIndex >= messages.length) bubbleIndex = messages.length - 1;
   steamText.innerHTML = messages[bubbleIndex];
@@ -252,11 +251,10 @@ function showSteamText(){
   });
 }
 
-// Кликабельная палочка
+// Палочка кликабельна
 wand.addEventListener("click", (e)=>{
   e.stopPropagation();
   if(!lastBubble || jamPlaced) return;
-  // при последнем бабле на кастрюлю пуф большой
   triggerPoof(pot.getBoundingClientRect().left + pot.offsetWidth/2,
               pot.getBoundingClientRect().top + pot.offsetHeight/2, 2);
   const newJar = document.createElement("img");
@@ -269,17 +267,22 @@ wand.addEventListener("click", (e)=>{
   container.replaceChild(newJar, pot);
   pot = newJar;
   jamPlaced = true;
+  berriesDisabled = true;
 });
 
-// Маленький текст "ещё не время 🪄"
+// Маленький текст "ещё не время" или "ягоды достаточно"
 wand.addEventListener("mousedown", (e)=>{
   if(lastBubble && !jamPlaced) return;
-  smallTip.innerText = "ещё не время 🪄";
-  smallTip.style.left = (e.clientX + 10) + "px";
-  smallTip.style.top = (e.clientY - 20) + "px";
+  showTip(e.clientX, e.clientY, "ещё не время 🪄");
+});
+
+function showTip(x,y,text){
+  smallTip.innerText = text;
+  smallTip.style.left = x + "px";
+  smallTip.style.top = y - 20 + "px";
   smallTip.style.opacity = "1";
   setTimeout(()=>{ smallTip.style.opacity="0"; }, 1000);
-});
+}
 </script>
 </body>
 </html>
