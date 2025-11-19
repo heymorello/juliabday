@@ -324,7 +324,7 @@ function checkWandUse(e) {
   if (overlap) {
     transformPotToJam();
   } else {
-    showTip(e.clientX, e.clientY, "к кастрюле 🥘🪄");
+    showTip(e.clientX, e.clientY, "");
   }
 }
 
@@ -340,7 +340,7 @@ function transformPotToJam() {
   newJar.style.position = "absolute";
   newJar.style.left = "35%";
   newJar.style.top = "3%";
-  newJar.style.width = "27%";
+  newJar.style.width = "29%";
   newJar.style.zIndex = 1;
 
   container.replaceChild(newJar, pot);
