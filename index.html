@@ -313,8 +313,8 @@ function transformPotToJam() {
   const newJar = document.createElement("img");
   newJar.src = jamJarSrc;
   newJar.style.position = "absolute";
-  newJar.style.left = "37%";
-  newJar.style.top = "5%";
+  newJar.style.left = "35%";
+  newJar.style.top = "3%";
   newJar.style.width = "27%";
   newJar.style.zIndex = 1;
 
@@ -338,7 +338,7 @@ function returnWandHome() {
 }
 
 // -------------------- ПОФ --------------------
-function triggerPoof(x, y, scale = 1) {
+function triggerPoof(x, y, scale = 3) {
   const puff = document.createElement("img");
   puff.src = "https://opengameart.org/sites/default/files/gif_4.gif";
   puff.className = "poof";
