@@ -109,7 +109,7 @@ body {
   cursor: pointer;
   z-index: 100;
 ">
-  🎺
+  Музыка 🎺
 </button>
 
   <div id="steam-text">
@@ -505,6 +505,26 @@ function showTip(x, y, text) {
   smallTip.style.opacity = "1";
   setTimeout(() => smallTip.style.opacity = "0", 1000);
 }
+
+  const musicBtn = document.getElementById("music-btn");
+
+// создаем элемент audio
+const bgMusic = new Audio("https://github.com/heymorello/juliabday/raw/refs/heads/main/HOYO-MiX_-_What_a_Delightful_Scenery_77641798.mp3"); // ссылка на mp3
+bgMusic.loop = true; // музыка повторяется
+
+let musicPlaying = false;
+
+musicBtn.addEventListener("click", () => {
+  if (!musicPlaying) {
+    bgMusic.play();
+    musicBtn.textContent = "Музыка 🎺";
+    musicPlaying = true;
+  } else {
+    bgMusic.pause();
+    musicBtn.textContent = "Музыка 🎺";
+    musicPlaying = false;
+  }
+});
 </script>
 
 </body>
