@@ -367,10 +367,9 @@ function checkDrop(berry) {
 function showSteamText() {
   steamText.innerHTML = messages[bubbleIndex].join("<br><br>");
 
-  // сразу после вывода текста проверяем: этот бабл — последний?
-  if (bubbleIndex === messages.length - 1) {
-    berriesLocked = true;   // 🔒 блокируем ягоды
-  }
+  // проверяем: это последний бабл?
+  lastBubble = bubbleIndex === messages.length - 1;
+  if (lastBubble) berriesLocked = true;
 
   bubbleIndex++;
 
